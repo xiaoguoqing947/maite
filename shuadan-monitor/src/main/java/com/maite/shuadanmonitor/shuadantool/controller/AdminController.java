@@ -1,8 +1,6 @@
 package com.maite.shuadanmonitor.shuadantool.controller;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.maite.shuadanmonitor.shuadantool.entity.MaiteAdmin;
+import com.maite.shuadanmonitor.shuadantool.entity.MaiteMainContentEntity;
 import com.maite.shuadanmonitor.shuadantool.entity.MaiteUser;
 import com.maite.shuadanmonitor.shuadantool.service.IMaiteDictionaryService;
 import com.maite.shuadanmonitor.shuadantool.service.IMaiteOrderIdService;
@@ -15,7 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.awt.*;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,17 +42,27 @@ public class AdminController {
     //#endregion
 
     @GetMapping("/")
-    public String Index(){
+    public String Index() {
         return "index";
     }
 
     @GetMapping("/api/admin")
     @ResponseBody
-    public ReturnInfo<List<MaiteUser>> GetMainContentData(){
-        MaiteAdmin maiteAdmin = new MaiteAdmin();
-        List<MaiteUser> maiteUserList =  maiteUserService.getList();
+    public ReturnInfo<List<MaiteUser>> GetMainContentData() {
+        List<MaiteMainContentEntity> list = new ArrayList<>();
+        // 获取用户信息
+        List<MaiteUser> maiteUserList = maiteUserService.getList();
+        for (MaiteUser item : maiteUserList) {
+            MaiteMainContentEntity entity = new MaiteMainContentEntity();
+            entity.setUin(item.getUin());
+            entity.setUserName(item.getUserName());
+            entity.setIsArrive(item.getIsArrive());
+            entity.setIsComment(item.getIsComment());
+            //TODO orderid day
+            entity.setAddTime(item.getShuadanTime().toString());
+        }
         ReturnInfo<List<MaiteUser>> returnInfo = new ReturnInfo<>();
-        returnInfo.set(true,0,"查询列表成功",maiteUserList);
+        returnInfo.set(true, 0, "查询列表成功", maiteUserList);
         return returnInfo;
     }
 }

@@ -13,4 +13,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IMaiteOrderIdService extends IService<MaiteOrderId> {
 
+    public String GetOrderId(int uin);
 }

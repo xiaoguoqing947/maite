@@ -1,7 +1,6 @@
 package com.maite.shuadanmonitor.shuadantool.entity;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * @author ：xiao guo qing
@@ -9,12 +8,21 @@ import lombok.NoArgsConstructor;
  * @description：
  */
 @Data
-@NoArgsConstructor
-public class MaiteAdmin {
+public class MaiteMainContentEntity {
+
+    private Integer uin;
+
     private  Integer day;
+
     private String userName;
+
     private String orderId;
+
     private String goodId;
-    private Boolean isArrive;
-    private Boolean isComment;
+
+    private String addTime;
+
+    private Integer isArrive;
+
+    private Integer isComment;
 }
