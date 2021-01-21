@@ -1,13 +1,16 @@
 <table class="layui-hide" id="mainTable"></table>
 
-<script type="text/html" id="switchTpl">
-    <!-- 这里的 checked 的状态只是演示 -->
-    <input type="checkbox" name="sex" value="{{d.id}}" lay-skin="switch" lay-text="女|男" lay-filter="sexDemo" {{ d.id == 10003 ? 'checked' : '' }}>
+<script type="text/html" id="switchTplForWuliu">
+    <input type="checkbox" name="wuliu" value="{{d.isArrive}}" lay-skin="switch" lay-text="是|否" lay-filter="wuliuDome" {{ d.isArrive == 1 ? 'checked' : '' }}>
 </script>
 
-<script type="text/html" id="checkboxTpl">
-    <!-- 这里的 checked 的状态只是演示 -->
-    <input type="checkbox" name="lock" value="{{d.id}}" title="锁定" lay-filter="lockDemo" {{ d.id == 10006 ? 'checked' : '' }}>
+<script type="text/html" id="switchTplForComment">
+
+    <input type="checkbox" name="comment" value="{{d.isComment}}" lay-skin="switch" lay-text="是|否" lay-filter="commentDome" {{ d.isComment == 1 ? 'checked' : '' }}>
+</script>
+
+<script type="text/html" id="checkboxTplForLock">
+    <input type="checkbox" id="lock" name="lock" value="{{d.lock}}" title="锁定" lay-filter="lockDemo" {{ d.lock == 1 ? 'checked' : '' }}>
 </script>
 <script>
     layui.use('table', function(){
@@ -32,21 +35,31 @@
                 ,{field:'userName', title:'用户名', templet: '#usernameTpl'}
                 ,{field:'phone', title:'联系电话'}
                 ,{field:'relation', title: '关系'}
-                ,{field:'isArrive', title:'是否到达', width:110, templet: '#switchTpl', unresize: true}
-                ,{field:'isComment', title:'是否评论', width:110, templet: '#checkboxTpl', unresize: true}
-                ,{field:'shuadanTime', title:'添加事件', width:110, templet: '#checkboxTpl', unresize: true}
+                ,{field:'shuadanTime', title:'下单时间',edit: true, width:300}
+                ,{field:'isArrive', title:'是否到达', width:110, templet: '#switchTplForWuliu', unresize: true,align:'center'}
+                ,{field:'isComment', title:'是否评论', width:110, templet: '#switchTplForComment', unresize: true,align:'center'}
+                ,{field:'lock', title:'最终确认', width:110,templet: '#checkboxTplForLock', unresize: true,align:'center'}
             ]]
             ,page: true
         });
 
-        //监听性别操作
-        form.on('switch(sexDemo)', function(obj){
-            layer.tips(this.value + ' ' + this.name + '：'+ obj.elem.checked, obj.othis);
+        //监听物流操作
+        form.on('switch(wuliuDome)', function(obj){
+            if(obj.elem.checked){
+            }
+            layer.tips(this.name + '：'+ obj.elem.checked, obj.othis);
+        });
+
+        //监听评论操作
+        form.on('switch(commentDome)', function(obj){
+            layer.tips(this.name + '：'+ obj.elem.checked, obj.othis);
         });
 
         //监听锁定操作
         form.on('checkbox(lockDemo)', function(obj){
-            layer.tips(this.value + ' ' + this.name + '：'+ obj.elem.checked, obj.othis);
+            if(obj.elem.checked){
+                $('#lock').attr('disabled','disabled');
+            }
         });
     });
 </script>
