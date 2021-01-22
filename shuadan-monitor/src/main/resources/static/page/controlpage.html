@@ -1,64 +1,92 @@
 <table class="layui-hide" id="mainTable"></table>
+<!--templet start-->
+<script type="text/html" id="orderIdTpl">
+    <a href="#" class="layui-table-link" target="_blank"><strong>{{ d.orderId }}</strong></a>
+</script>
+
+<script type="text/html" id="dayTpl">
+    <strong>{{ d.day >= 3 ? '<span style="color: red">'+d.day+'</span>' : d.day }}</strong>
+</script>
 
 <script type="text/html" id="switchTplForWuliu">
-    <input type="checkbox" name="wuliu" value="{{d.isArrive}}" lay-skin="switch" lay-text="是|否" lay-filter="wuliuDome" {{ d.isArrive == 1 ? 'checked' : '' }}>
+    <input type="checkbox" id="wuliu" name="wuliu" value="{{d.isArrive}}" lay-skin="switch" lay-text="是|否"
+           lay-filter="wuliuDome" {{ d.isArrive== 1 ? 'checked' : '' }}>
 </script>
 
 <script type="text/html" id="switchTplForComment">
 
-    <input type="checkbox" name="comment" value="{{d.isComment}}" lay-skin="switch" lay-text="是|否" lay-filter="commentDome" {{ d.isComment == 1 ? 'checked' : '' }}>
+    <input type="checkbox" id="comment" name="comment" value="{{d.isComment}}" lay-skin="switch" lay-text="是|否"
+           lay-filter="commentDome" {{ d.isComment== 1 ? 'checked' : '' }}>
 </script>
 
 <script type="text/html" id="checkboxTplForLock">
-    <input type="checkbox" id="lock" name="lock" value="{{d.lock}}" title="锁定" lay-filter="lockDemo" {{ d.lock == 1 ? 'checked' : '' }}>
+    <input type="checkbox" id="lock" name="lock" value="{{d.lock}}" title="锁定" lay-filter="lockDemo" {{ d.lock== 1
+           ? 'checked' : '' }}>
 </script>
+<!--templet end-->
 <script>
-    layui.use('table', function(){
+    layui.use('table', function () {
         var table = layui.table
-            ,form = layui.form;
+            , form = layui.form;
 
         table.render({
             elem: '#mainTable'
-            ,url:'/api/admin'
-            ,cellMinWidth: 80
-            ,parseData: function(res){ //res 即为原始返回的数据
+            , url: '/api/admin'
+            , cellMinWidth: 80
+            , parseData: function (res) { //res 即为原始返回的数据
                 console.log(res)
                 return {
                     "code": res.code, //解析接口状态
-                    "msg": res.information, //解析提示文本
-                    "count": res.total, //解析数据长度
+                    "msg": res.msg, //解析提示文本
+                    "count": res.count, //解析数据长度
                     "data": res.data //解析数据列表
                 };
             }
-            ,cols: [[
-                {type:'numbers'}
-                ,{field:'userName', title:'用户名', templet: '#usernameTpl'}
-                ,{field:'phone', title:'联系电话'}
-                ,{field:'relation', title: '关系'}
-                ,{field:'shuadanTime', title:'下单时间',edit: true, width:300}
-                ,{field:'isArrive', title:'是否到达', width:110, templet: '#switchTplForWuliu', unresize: true,align:'center'}
-                ,{field:'isComment', title:'是否评论', width:110, templet: '#switchTplForComment', unresize: true,align:'center'}
-                ,{field:'lock', title:'最终确认', width:110,templet: '#checkboxTplForLock', unresize: true,align:'center'}
+            , method: 'post'
+            , cols: [[
+                {type: 'numbers'}
+                , {field: 'userName', title: '用户名', edit: true}
+                , {field: 'orderId', title: '订单编号', edit: true, templet: '#orderIdTpl'}
+                , {field: 'addTime', title: '购买时间'}
+                , {field: 'day', title: '已购买天数', width: 300, sort: true, templet: '#dayTpl'}
+                , {
+                    field: 'isArrive',
+                    title: '物流是否到达',
+                    width: 120,
+                    templet: '#switchTplForWuliu',
+                    unresize: true,
+                    align: 'center'
+                }
+                , {
+                    field: 'isComment',
+                    title: '是否评论',
+                    width: 110,
+                    templet: '#switchTplForComment',
+                    unresize: true,
+                    align: 'center'
+                }
+                , {
+                    field: 'lock',
+                    title: '最终确认',
+                    width: 110,
+                    templet: '#checkboxTplForLock',
+                    unresize: true,
+                    align: 'center'
+                }
             ]]
-            ,page: true
-        });
-
-        //监听物流操作
-        form.on('switch(wuliuDome)', function(obj){
-            if(obj.elem.checked){
+            , page: true
+            ,request: {
+                pageName: 'page' // 页码的参数名称，默认：page
+                , limitName: 'size' //每页数据量的参数名，默认：limit
             }
-            layer.tips(this.name + '：'+ obj.elem.checked, obj.othis);
-        });
-
-        //监听评论操作
-        form.on('switch(commentDome)', function(obj){
-            layer.tips(this.name + '：'+ obj.elem.checked, obj.othis);
         });
 
         //监听锁定操作
-        form.on('checkbox(lockDemo)', function(obj){
-            if(obj.elem.checked){
-                $('#lock').attr('disabled','disabled');
+        form.on('checkbox(lockDemo)', function (obj) {
+            if (obj.elem.checked) {
+                $('#lock').attr('disabled', 'disabled');
+                $('#comment').attr('disabled', 'disabled');
+                $('#wuliu').attr('disabled', 'disabled');
             }
         });
     });

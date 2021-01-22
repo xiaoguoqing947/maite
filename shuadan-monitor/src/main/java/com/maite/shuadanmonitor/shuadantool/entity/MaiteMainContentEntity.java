@@ -18,8 +18,6 @@ public class MaiteMainContentEntity {
 
     private String orderId;
 
-    private String goodId;
-
     private String addTime;
 
     private Integer isArrive;

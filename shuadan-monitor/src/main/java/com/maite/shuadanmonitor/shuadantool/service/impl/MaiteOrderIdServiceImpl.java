@@ -16,7 +16,7 @@ import java.util.List;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author xgq
@@ -35,10 +35,13 @@ public class MaiteOrderIdServiceImpl extends ServiceImpl<MaiteOrderIdMapper, Mai
         String orderId = "";
         try {
             QueryWrapper<MaiteOrderId> queryWrapper = new QueryWrapper<>();
-            queryWrapper.excludeColumns("OrderId").eq("Uin", uin).orderByDesc("AddTime");
-//            orderId = maiteOrderIdMapper.selectById(queryWrapper);
+            queryWrapper.eq("Uin", uin).orderByDesc("AddTime").select("OrderId");
+            MaiteOrderId orderIdEntity = maiteOrderIdMapper.selectOne(queryWrapper);
+            if (orderIdEntity != null) {
+                orderId = orderIdEntity.getOrderId();
+            }
         } catch (Exception ex) {
-            log.error("查询数据列表异常", ex);
+            log.error("查询订单编号异常", ex);
         }
         return orderId;
     }
