@@ -48,7 +48,7 @@ public class CodeGenerator {
 
         // 数据源配置
         DataSourceConfig dsc = new DataSourceConfig();
-        dsc.setUrl("jdbc:mysql://localhost:3306/test1?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=Hongkong");
+        dsc.setUrl("jdbc:mysql://localhost:3306/maite_shuadandb?useUnicode=true&useSSL=false&characterEncoding=utf8&serverTimezone=Hongkong");
         dsc.setDriverName("com.mysql.cj.jdbc.Driver");
         dsc.setUsername("root");
         dsc.setPassword("root");
@@ -103,8 +103,8 @@ public class CodeGenerator {
     public static String[] getListTableName(){
         List<String> list = new ArrayList<>();
 //        list.add("maite_user");
-        list.add("maite_order_id");
-//        list.add("maite_dictionary");
+//        list.add("maite_order_id");
+        list.add("maite_dictionary");
         return list.toArray(new String[list.size()]);
     }
     //#endregion

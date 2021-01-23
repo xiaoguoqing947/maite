@@ -3,11 +3,11 @@ var pageVm = new function () {
        mainContent : "#main_content"
     }
     this.init = function () {
-        load();
+        pageVm.load("./page/maitemainmanage.html");
     };
 
-    var load = function () {
-        $(control.mainContent).load("./page/controlpage.html");
+    this.load = function (url) {
+        $(control.mainContent).load(url);
     }
 };
 

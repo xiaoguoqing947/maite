@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:mysql://localhost:3306/test1?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/maite_shuadandb?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
     password: root
     username: root
     driver-class-name: com.mysql.cj.jdbc.Driver

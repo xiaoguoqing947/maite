@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
  * </p>
  *
  * @author xgq
- * @since 2021-01-20
+ * @since 2021-01-23
  */
 @Service
 public class MaiteDictionaryServiceImpl extends ServiceImpl<MaiteDictionaryMapper, MaiteDictionary> implements IMaiteDictionaryService {

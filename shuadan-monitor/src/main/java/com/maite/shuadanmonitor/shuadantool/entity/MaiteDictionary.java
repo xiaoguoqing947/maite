@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author xgq
- * @since 2021-01-20
+ * @since 2021-01-23
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -50,8 +50,8 @@ public class MaiteDictionary implements Serializable {
     /**
      * 字典key
      */
-    @TableField("Key")
-    private String Key;
+    @TableField("KeyName")
+    private String KeyName;
 
     /**
      * 字典key描述
