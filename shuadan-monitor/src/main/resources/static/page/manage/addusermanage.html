@@ -6,14 +6,15 @@
         <div class="layui-inline">
             <label class="layui-form-label">用户名</label>
             <div class="layui-input-inline">
-                <input type="text" name="username" lay-verify="required" placeholder="请输入" autocomplete="off"
+                <input type="text" id="username" name="username" lay-verify="required" placeholder="请输入"
+                       autocomplete="off"
                        class="layui-input">
             </div>
         </div>
         <div class="layui-inline">
             <label class="layui-form-label">联系电话</label>
             <div class="layui-input-inline">
-                <input type="text" name="phoneNumber" placeholder="请输入" autocomplete="off"
+                <input type="text" id="phoneNumber" name="phoneNumber" placeholder="请输入" autocomplete="off"
                        class="layui-input">
             </div>
         </div>
@@ -21,7 +22,7 @@
     <div class="layui-form-item">
         <label class="layui-form-label">订单号</label>
         <div class="layui-input-inline">
-            <input type="text" name="orderId" lay-verify="required" placeholder="请输入" autocomplete="off"
+            <input type="text" id="orderId" name="orderId" lay-verify="required" placeholder="请输入" autocomplete="off"
                    class="layui-input">
         </div>
     </div>
@@ -47,13 +48,13 @@
     <div class="layui-form-item">
         <label class="layui-form-label">物流</label>
         <div class="layui-input-block">
-            <input type="checkbox" name="wuliuSwitch" lay-skin="switch" lay-text="已到|未到">
+            <input type="checkbox" id="wuliuSwitch" name="wuliuSwitch" lay-skin="switch" lay-text="已到|未到">
         </div>
     </div>
     <div class="layui-form-item">
         <label class="layui-form-label">评价</label>
         <div class="layui-input-block">
-            <input type="checkbox" name="commentSwitch" lay-skin="switch" lay-text="已评|未评">
+            <input type="checkbox" id="commentSwitch" name="commentSwitch" lay-skin="switch" lay-text="已评|未评">
         </div>
     </div>
     <div class="layui-form-item">
@@ -66,14 +67,14 @@
             url: '/api/dictionary/GetDicTypeData'
             , contentType: "application/json;charset=UTF-8"
             , type: 'get'
-            ,success: function (data) {
+            , success: function (data) {
                 var goodCheckBoxHtml = "";
                 var relationCheckBoxHtml = "";
                 for (var i = 0; i < data.length; i++) {
-                    if(data[i].type === "good"){
-                        goodCheckBoxHtml+='<input type="checkbox" name="good_'+data[i].dcisValue+'" title="'+data[i].keyName+'" value="'+data[i].dcisValue+'">'
-                    }else if(data[i].type === "relation"){
-                        relationCheckBoxHtml +='<input type="radio" name="relation" value="'+data[i].dcisValue+'" title="'+data[i].keyDesc+'">';
+                    if (data[i].type === "good") {
+                        goodCheckBoxHtml += '<input type="checkbox" id="good" name="good" title="' + data[i].keyName + '" value="' + data[i].dcisValue + '">'
+                    } else if (data[i].type === "relation") {
+                        relationCheckBoxHtml += '<input type="radio" id="relation" name="relation" value="' + data[i].dcisValue + '" title="' + data[i].keyDesc + '" checked="'+(data[i].dcisValue === 1?"checked":"")+'">';
                     }
                 }
                 $('#goodDiv').html(goodCheckBoxHtml);
@@ -99,10 +100,42 @@
 
         //监听提交
         form.on('submit(submitBtn)', function (data) {
-            layer.alert(JSON.stringify(data.field), {
-                title: '最终的提交信息'
-            })
-            return false;
+            var goods = '';
+            $("input:checkbox[name='good']:checked").each(function (i) {
+                if (0 === i) {
+                    goods = $(this).val();
+                } else {
+                    goods += ("," + $(this).val());
+                }
+            });
+            var userForm = {
+                "userName": $('#username').val(),
+                "phoneNumber": $('#phoneNumber').val(),
+                "orderId": $('#orderId').val(),
+                "orderDate": $('#orderDate').val(),
+                "good": goods,
+                "relation": $('#relation').val(),
+                "wuliuSwitch": $('#wuliuSwitch').is(':checked') ? 1 : 0,
+                "commentSwitch": $('#commentSwitch').is(':checked') ? 1 : 0
+            }
+            $.ajax({
+                url: '/api/addUserMessage'
+                , contentType: "application/json;charset=UTF-8"
+                , type: 'post'
+                , dataType: 'json'
+                , data: JSON.stringify(userForm)
+                , success: function (result) {
+                    if(result){
+                        layer.alert("添加成功");
+                        pageVm.load('./page/maitemainmanage.html');
+                    }else{
+                        layer.alert("添加失败");
+                    }
+                },
+                error: function (error) {
+                    console.log(error)
+                }
+            });
         });
     });
 </script>

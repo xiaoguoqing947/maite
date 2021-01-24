@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.text.MessageFormat;
 import java.util.List;
 
 /**
@@ -36,6 +37,7 @@ public class MaiteOrderIdServiceImpl extends ServiceImpl<MaiteOrderIdMapper, Mai
         try {
             QueryWrapper<MaiteOrderId> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("Uin", uin).orderByDesc("AddTime").select("OrderId");
+            queryWrapper.last("LIMIT 1");
             MaiteOrderId orderIdEntity = maiteOrderIdMapper.selectOne(queryWrapper);
             if (orderIdEntity != null) {
                 orderId = orderIdEntity.getOrderId();

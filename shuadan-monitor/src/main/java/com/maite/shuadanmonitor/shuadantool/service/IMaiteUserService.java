@@ -41,4 +41,22 @@ public interface IMaiteUserService extends IService<MaiteUser> {
      */
     public int getCount();
     //#endregion
+
+    //#region 根据用户名获取用户Uin [getUinByUserName(String userName)]
+
+    /**
+     * 根据用户名获取用户Uin
+     * @return 返回UIN
+     */
+    public int getUinByUserName(String userName);
+    //#endregion
+
+    //#region 根据用户名判断用户是否存在 [judgeUserIsExist(String userName)]
+
+    /**
+     * 根据用户名获取用户Uin
+     * @return 返回UIN
+     */
+    public Boolean judgeUserIsExist(String userName);
+    //#endregion
 }

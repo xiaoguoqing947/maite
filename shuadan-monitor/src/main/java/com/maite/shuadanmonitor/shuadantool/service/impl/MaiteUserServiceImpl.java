@@ -68,4 +68,18 @@ public class MaiteUserServiceImpl extends ServiceImpl<MaiteUserMapper, MaiteUser
         }
         return count;
     }
+
+    @Override
+    public int getUinByUserName(String userName) {
+        QueryWrapper<MaiteUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("UserName", userName).select("Uin");
+        return maiteUserMapper.selectOne(queryWrapper).getUin();
+    }
+
+    @Override
+    public Boolean judgeUserIsExist(String userName) {
+        QueryWrapper<MaiteUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("UserName", userName);
+        return maiteUserMapper.selectOne(queryWrapper) != null;
+    }
 }
