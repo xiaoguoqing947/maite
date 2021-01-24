@@ -1,6 +1,7 @@
 package com.maite.shuadanmonitor.shuadantool.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -11,9 +12,11 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
 import java.text.MessageFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -39,7 +42,7 @@ public class MaiteUserServiceImpl extends ServiceImpl<MaiteUserMapper, MaiteUser
             queryWrapper.ne("IsComment", 1);
             maiteUsers = maiteUserMapper.selectList(queryWrapper);
         } catch (Exception ex) {
-            log.error("查询数据列表异常", ex);
+            log.error("[getList]查询数据列表异常", ex);
         }
         return maiteUsers;
     }
@@ -53,7 +56,7 @@ public class MaiteUserServiceImpl extends ServiceImpl<MaiteUserMapper, MaiteUser
             queryWrapper.last(MessageFormat.format("LIMIT {0},{1}", (page - 1) * size, size));
             maiteUsers = maiteUserMapper.selectList(queryWrapper);
         } catch (Exception ex) {
-            log.error("查询分页数据列表异常", ex);
+            log.error("[getPageList]查询分页数据列表异常", ex);
         }
         return maiteUsers;
     }
@@ -64,22 +67,44 @@ public class MaiteUserServiceImpl extends ServiceImpl<MaiteUserMapper, MaiteUser
         try {
             count = maiteUserMapper.selectCount(new QueryWrapper<>());
         } catch (Exception ex) {
-            log.error("查询数据列表总数异常", ex);
+            log.error("[getCount]查询数据列表总数异常", ex);
         }
         return count;
     }
 
     @Override
     public int getUinByUserName(String userName) {
-        QueryWrapper<MaiteUser> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("UserName", userName).select("Uin");
+        QueryWrapper<MaiteUser> queryWrapper = null;
+        try {
+            queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("UserName", userName).select("Uin");
+        }catch (Exception e){
+            log.error("[getUinByUserName]查询数据UIN异常", e);
+        }
         return maiteUserMapper.selectOne(queryWrapper).getUin();
     }
 
     @Override
     public Boolean judgeUserIsExist(String userName) {
-        QueryWrapper<MaiteUser> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("UserName", userName);
+        QueryWrapper<MaiteUser> queryWrapper = null;
+        try {
+            queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("UserName", userName);
+        }catch (Exception e){
+            log.error("[judgeUserIsExist]查询指定用户名是否存在异常", e);
+        }
         return maiteUserMapper.selectOne(queryWrapper) != null;
+    }
+
+    @Override
+    public void updateTimeByUserName(MaiteUser maiteUser) {
+        UpdateWrapper<MaiteUser> updateWrapper = null;
+        try {
+            updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("UserName", maiteUser.getUserName());
+            maiteUserMapper.update(maiteUser,updateWrapper);
+        }catch (Exception e){
+            log.error("[updateTimeByUserName]更新刷单时间异常",e);
+        }
     }
 }

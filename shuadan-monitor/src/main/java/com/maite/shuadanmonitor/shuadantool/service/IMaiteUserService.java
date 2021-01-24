@@ -3,6 +3,7 @@ package com.maite.shuadanmonitor.shuadantool.service;
 import com.maite.shuadanmonitor.shuadantool.entity.MaiteUser;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -59,4 +60,13 @@ public interface IMaiteUserService extends IService<MaiteUser> {
      */
     public Boolean judgeUserIsExist(String userName);
     //#endregion
+
+    //#region 根据用户名更新用户刷单时间 [updateTimeByUserName(MaiteUser maiteUser)]
+
+    /**
+     * 根据用户名更新用户刷单时间
+     */
+    public void updateTimeByUserName(MaiteUser maiteUser);
+    //#endregion
+
 }

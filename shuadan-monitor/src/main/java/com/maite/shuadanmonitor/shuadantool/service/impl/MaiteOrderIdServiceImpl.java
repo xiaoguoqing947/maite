@@ -32,19 +32,16 @@ public class MaiteOrderIdServiceImpl extends ServiceImpl<MaiteOrderIdMapper, Mai
 
 
     @Override
-    public String GetOrderId(int uin) {
-        String orderId = "";
+    public MaiteOrderId GetOrderId(int uin) {
+        MaiteOrderId orderIdEntity = null;
         try {
             QueryWrapper<MaiteOrderId> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("Uin", uin).orderByDesc("AddTime").select("OrderId");
+            queryWrapper.eq("Uin", uin).orderByDesc("AddTime");
             queryWrapper.last("LIMIT 1");
-            MaiteOrderId orderIdEntity = maiteOrderIdMapper.selectOne(queryWrapper);
-            if (orderIdEntity != null) {
-                orderId = orderIdEntity.getOrderId();
-            }
+            orderIdEntity = maiteOrderIdMapper.selectOne(queryWrapper);
         } catch (Exception ex) {
-            log.error("查询订单编号异常", ex);
+            log.error("[GetOrderId]查询订单编号异常", ex);
         }
-        return orderId;
+        return orderIdEntity;
     }
 }

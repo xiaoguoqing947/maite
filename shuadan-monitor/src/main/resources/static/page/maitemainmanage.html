@@ -1,4 +1,4 @@
-<table class="layui-hide" id="mainTable"></table>
+<table class="layui-hide" id="mainTable" lay-filter="mainTable"></table>
 <!--templet start-->
 <script type="text/html" id="orderIdTpl">
     <a href="#" class="layui-table-link" target="_blank"><strong>{{ d.orderId }}</strong></a>
@@ -9,19 +9,14 @@
 </script>
 
 <script type="text/html" id="switchTplForWuliu">
-    <input type="checkbox" id="wuliu" name="wuliu" value="{{d.isArrive}}" lay-skin="switch" lay-text="是|否"
+    <input type="checkbox" id="wuliu" name="wuliu" value='{{d.uin}}' lay-skin="switch" lay-text="是|否"
            lay-filter="wuliuDome" {{ d.isArrive== 1 ? 'checked' : '' }}>
 </script>
 
 <script type="text/html" id="switchTplForComment">
 
-    <input type="checkbox" id="comment" name="comment" value="{{d.isComment}}" lay-skin="switch" lay-text="是|否"
+    <input type="checkbox" id="comment" name="comment" value="{{d.uin}}" lay-skin="switch" lay-text="是|否"
            lay-filter="commentDome" {{ d.isComment== 1 ? 'checked' : '' }}>
-</script>
-
-<script type="text/html" id="checkboxTplForLock">
-    <input type="checkbox" id="lock" name="lock" value="{{d.lock}}" title="锁定" lay-filter="lockDemo" {{ d.lock== 1
-           ? 'checked' : '' }}>
 </script>
 <!--templet end-->
 <script>
@@ -55,7 +50,7 @@
                     width: 120,
                     templet: '#switchTplForWuliu',
                     unresize: true,
-                    align: 'center'
+                    align: 'center',
                 }
                 , {
                     field: 'isComment',
@@ -63,31 +58,46 @@
                     width: 110,
                     templet: '#switchTplForComment',
                     unresize: true,
-                    align: 'center'
-                }
-                , {
-                    field: 'lock',
-                    title: '最终确认',
-                    width: 110,
-                    templet: '#checkboxTplForLock',
-                    unresize: true,
-                    align: 'center'
+                    align: 'center',
                 }
             ]]
             , page: true
-            ,request: {
+            , request: {
                 pageName: 'page' // 页码的参数名称，默认：page
                 , limitName: 'size' //每页数据量的参数名，默认：limit
             }
         });
+        //监听性别操作
+        form.on('switch(wuliuDome)', function (obj) {
+            var state = obj.elem.checked ? 1 : 0;
+            var data = state + "_" + this.value;
+            $.ajax({
+                url: "api/updateState/IsArrive/" + data
+                , type: 'get'
+                , async: false
+                ,error: function (error) {
+                    console.log(error)
+                }
+            })
+        });
 
-        //监听锁定操作
-        form.on('checkbox(lockDemo)', function (obj) {
-            if (obj.elem.checked) {
-                $('#lock').attr('disabled', 'disabled');
-                $('#comment').attr('disabled', 'disabled');
-                $('#wuliu').attr('disabled', 'disabled');
-            }
+        //监听性别操作
+        form.on('switch(commentDome)', function (obj) {
+            var state = obj.elem.checked ? 1 : 0;
+            var data = state + "_" + this.value;
+            $.ajax({
+                url: "api/updateState/IsComment/" + data
+                , type: 'get'
+                , async: false
+                ,error: function (error) {
+                    console.log(error)
+                }
+            })
+        });
+        //监听行单击事件（双击事件为：rowDouble）
+        table.on('row(mainTable)', function (obj) {
+            //标注选中样式
+            obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
         });
     });
 </script>

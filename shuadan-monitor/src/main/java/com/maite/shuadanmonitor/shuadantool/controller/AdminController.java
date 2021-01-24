@@ -1,6 +1,7 @@
 package com.maite.shuadanmonitor.shuadantool.controller;
 
 import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.maite.shuadanmonitor.shuadantool.entity.MaiteMainContentEntity;
 import com.maite.shuadanmonitor.shuadantool.entity.MaiteOrderId;
 import com.maite.shuadanmonitor.shuadantool.entity.MaiteUser;
@@ -58,17 +59,19 @@ public class AdminController {
         // 获取用户信息
         int totalCount = maiteUserService.getCount();
         List<MaiteUser> maiteUserList = maiteUserService.getPageList(page, size);
+        MaiteOrderId orderIdEntity = null;
         for (MaiteUser item : maiteUserList) {
+            orderIdEntity = maiteOrderIdService.GetOrderId(item.getUin());
             MaiteMainContentEntity entity = new MaiteMainContentEntity();
             entity.setUin(item.getUin());
             entity.setUserName(item.getUserName());
             entity.setIsArrive(item.getIsArrive());
             entity.setIsComment(item.getIsComment());
-            entity.setAddTime(DateUtil.formatDate(item.getShuadanTime()));
-            entity.setDay((int) DateUtil.betweenDay(new Date(), item.getShuadanTime(), true));
-            entity.setOrderId(maiteOrderIdService.GetOrderId(item.getUin()));
+            entity.setAddTime(DateUtil.formatDate(orderIdEntity.getAddTime()));
+            entity.setDay((int) DateUtil.betweenDay(new Date(), orderIdEntity.getAddTime(), true));
+            entity.setOrderId(orderIdEntity.getOrderId());
             list.add(entity);
-        }//TODO 更新用户购买时间
+        }
         HashMap<String, Object> resultMap = new HashMap<>();
         resultMap.put("code", 0);
         resultMap.put("msg", "查询列表成功");
@@ -85,16 +88,19 @@ public class AdminController {
         try {
             //#region 用户相关信息对象赋值 TODO 设置回滚对象，防止插入失败
             String userName = userVoEntity.getUserName();
-            if(!maiteUserService.judgeUserIsExist(userName)){
-                MaiteUser maiteUser = new MaiteUser();
-                maiteUser.setUserName(userName);
-                maiteUser.setIsArrive(userVoEntity.getWuliuSwitch());
-                maiteUser.setIsComment(userVoEntity.getCommentSwitch());
-                maiteUser.setShuadanTime(userVoEntity.getOrderDate());
-                maiteUser.setRelation(userVoEntity.getRelation());
-                maiteUser.setPhone(userVoEntity.getPhoneNumber());
-                //添加到maite_user表
+            MaiteUser maiteUser = new MaiteUser();
+            maiteUser.setUserName(userName);
+            maiteUser.setIsArrive(userVoEntity.getWuliuSwitch());
+            maiteUser.setIsComment(userVoEntity.getCommentSwitch());
+            maiteUser.setShuadanTime(userVoEntity.getOrderDate());
+            maiteUser.setRelation(userVoEntity.getRelation());
+            maiteUser.setPhone(userVoEntity.getPhoneNumber());
+            if (!maiteUserService.judgeUserIsExist(userName)) {
+                //添加用户信息到maite_user表
                 maiteUserService.save(maiteUser);
+            } else {
+                //更新用户下单时间
+                maiteUserService.updateTimeByUserName(maiteUser);
             }
             int uin = maiteUserService.getUinByUserName(userName);
             MaiteOrderId orderIdEntity = new MaiteOrderId();
@@ -110,5 +116,22 @@ public class AdminController {
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         }
         return result;
+    }
+
+    @GetMapping("/api/updateState/{type}/{data}")
+    @ResponseBody
+    public Boolean lockUser(@PathVariable String type, @PathVariable String data) {
+        //data: 值_用户名UIN
+        String[] arr = data.split("_");
+        UpdateWrapper<MaiteUser> updateWrapper = new UpdateWrapper<>();
+        MaiteUser maiteUser = new MaiteUser();
+        if (type.equals("IsArrive")) {
+            maiteUser.setIsArrive(Integer.valueOf(arr[0]));
+        } else if (type.equals("IsComment")) {
+            maiteUser.setIsComment(Integer.valueOf(arr[0]));
+        }
+        updateWrapper.set(type, arr[0]);
+        updateWrapper.eq("Uin", arr[1]);
+        return maiteUserService.update(maiteUser, updateWrapper);
     }
 }
