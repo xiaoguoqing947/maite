@@ -134,4 +134,18 @@ public class AdminController {
         updateWrapper.eq("Uin", arr[1]);
         return maiteUserService.update(maiteUser, updateWrapper);
     }
+
+    @GetMapping("/api/queryGoods/{orderId}")
+    @ResponseBody
+    public HashMap<String, Object> queryUserGoodsMessageByOrderId(@PathVariable String orderId) {
+        String goods = maiteOrderIdService.queryGoods(orderId);
+        String[] goodArr = goods.split(",");
+        HashMap<String,Object> resultMap = new HashMap<>();
+        List<String> goodNameList = new ArrayList<>();
+        for (int i = 0;i<goodArr.length;i++){
+            goodNameList.add(maiteDictionaryService.queryKeyName("good",goodArr[i]));
+        }
+        resultMap.put("data",goodNameList);
+        return resultMap;
+    }
 }

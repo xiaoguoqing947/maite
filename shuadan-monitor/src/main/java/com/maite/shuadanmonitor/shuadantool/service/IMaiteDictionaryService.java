@@ -13,4 +13,11 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface IMaiteDictionaryService extends IService<MaiteDictionary> {
 
+    /**
+     * 根据类型和值获取字典名
+     * @param type
+     * @param value
+     * @return
+     */
+    public String queryKeyName(String type,String value);
 }

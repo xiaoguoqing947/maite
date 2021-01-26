@@ -44,4 +44,18 @@ public class MaiteOrderIdServiceImpl extends ServiceImpl<MaiteOrderIdMapper, Mai
         }
         return orderIdEntity;
     }
+
+    @Override
+    public String queryGoods(String orderId) {
+        String goods = "";
+        try {
+            QueryWrapper<MaiteOrderId> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("OrderId", orderId).orderByDesc("AddTime");
+            queryWrapper.last("LIMIT 1");
+            goods = maiteOrderIdMapper.selectOne(queryWrapper).getGoodId();
+        } catch (Exception ex) {
+            log.error("[queryGoods]查询商品信息异常", ex);
+        }
+        return goods;
+    }
 }
