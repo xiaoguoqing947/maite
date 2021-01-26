@@ -2,6 +2,9 @@ package com.maite.shuadanmonitor.shuadantool.service;
 
 import com.maite.shuadanmonitor.shuadantool.entity.MaiteDictionary;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.maite.shuadanmonitor.shuadantool.entity.MaiteUser;
+
+import java.util.List;
 
 /**
  * <p>
@@ -28,5 +31,14 @@ public interface IMaiteDictionaryService extends IService<MaiteDictionary> {
      * @return 返回分页字典列表数量
      */
     public int getCount();
+    //#endregion
+
+    //#region 获取分页字典列表 [getPageList(int page,int size)]
+
+    /**
+     * 获取分页字典列表
+     * @return 返回分页字典列表
+     */
+    public List<MaiteDictionary> getPageList(int page, int size);
     //#endregion
 }

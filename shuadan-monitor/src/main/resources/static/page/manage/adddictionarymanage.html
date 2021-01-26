@@ -33,6 +33,10 @@
                 , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150}
             ]]
             , page: true
+            , request: {
+                pageName: 'page' // 页码的参数名称，默认：page
+                , limitName: 'size' //每页数据量的参数名，默认：limit
+            }
         });
 
         //工具栏事件

@@ -46,16 +46,11 @@ public class MaiteDictionaryController {
 
     @GetMapping("/queryList")
     @ResponseBody
-    public HashMap<String, Object> queryList() {
+    public HashMap<String, Object> queryList(@RequestParam("page") int page, @RequestParam("size") int size) {
         List<MaiteDictionary> list = null;
         int totalCount = 0;
-        try {
-            QueryWrapper<MaiteDictionary> queryWrapper = new QueryWrapper<>();
-            list = maiteDictionaryService.list(queryWrapper);
-            totalCount = maiteDictionaryService.getCount();
-        } catch (Exception e) {
-            log.error("查询字典列表异常", e);
-        }
+        list = maiteDictionaryService.getPageList(page, size);
+        totalCount = maiteDictionaryService.getCount();
         HashMap<String, Object> resultMap = new HashMap<>();
         resultMap.put("code", 0);
         resultMap.put("msg", "查询列表成功");
@@ -81,7 +76,7 @@ public class MaiteDictionaryController {
 
     @PostMapping("/delete")
     @ResponseBody
-    public Boolean delete(@RequestParam("id")int id){
+    public Boolean delete(@RequestParam("id") int id) {
         Boolean result = false;
         try {
             result = maiteDictionaryService.removeById(id);
