@@ -135,6 +135,7 @@
                     console.log(error)
                 }
             });
+            return false;//禁止跳转，否则会提交两次，且页面会刷新
         });
     });
 </script>
