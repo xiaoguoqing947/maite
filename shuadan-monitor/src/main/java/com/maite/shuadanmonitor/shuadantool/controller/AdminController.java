@@ -92,7 +92,7 @@ public class AdminController {
             maiteUser.setUserName(userName);
             maiteUser.setIsArrive(userVoEntity.getWuliuSwitch());
             maiteUser.setIsComment(userVoEntity.getCommentSwitch());
-            maiteUser.setShuadanTime(userVoEntity.getOrderDate());
+            maiteUser.setShuadanTime(new Date());
             maiteUser.setRelation(userVoEntity.getRelation());
             maiteUser.setPhone(userVoEntity.getPhoneNumber());
             if (!maiteUserService.judgeUserIsExist(userName)) {

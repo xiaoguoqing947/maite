@@ -74,7 +74,7 @@
                     if (data[i].type === "good") {
                         goodCheckBoxHtml += '<input type="checkbox" id="good" name="good" title="' + data[i].keyName + '" value="' + data[i].dcisValue + '">'
                     } else if (data[i].type === "relation") {
-                        relationCheckBoxHtml += '<input type="radio" id="relation" name="relation" value="' + data[i].keyName + '" title="' + data[i].keyDesc + '" checked="'+(data[i].dcisValue === 1?"checked":"")+'">';
+                        relationCheckBoxHtml += '<input type="radio" id="relation" name="relation" value="' + data[i].dcisValue + '" title="' + data[i].keyDesc + '" checked="' + (data[i].dcisValue === 1 ? "checked" : "") + '">';
                     }
                 }
                 $('#goodDiv').html(goodCheckBoxHtml);
@@ -125,11 +125,13 @@
                 , dataType: 'json'
                 , data: JSON.stringify(userForm)
                 , success: function (result) {
-                    debugger;
-                    if(result){
-                        layer.alert("添加成功");
-                    }else{
-                        layer.alert("添加失败");
+                    if (result) {
+                        $("#username").val('');
+                        $('#phoneNumber').val('');
+                        $('#orderId').val('');
+                        layer.msg("添加成功");
+                    } else {
+                        layer.msg("添加失败");
                     }
                 },
                 error: function (error) {
