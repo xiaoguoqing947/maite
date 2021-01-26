@@ -58,10 +58,10 @@
                         }
                         , success: function (result) {
                             if (result) {
-                                layer.alert("删除成功");
+                                layer.msg("删除成功");
                                 pageVm.load('./page/manage/adddictionarymanage.html');
                             } else {
-                                layer.alert("删除失败");
+                                layer.msg("删除失败");
                             }
                         },
                         error: function (error) {
@@ -80,9 +80,9 @@
                         , data: JSON.stringify(data)
                         , success: function (result) {
                             if (result) {
-                                layer.alert("更新成功");
+                                layer.msg("更新成功");
                             } else {
-                                layer.alert("更新失败");
+                                layer.msg("更新失败");
                             }
                         },
                         error: function (error) {
