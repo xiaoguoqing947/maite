@@ -7,6 +7,7 @@ var pageVm = new function () {
     };
 
     this.load = function (url) {
+        $(control.mainContent).empty();
         $(control.mainContent).load(url);
     }
 };

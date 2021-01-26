@@ -1,10 +1,10 @@
 <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
-    <legend>下单用户信息录入</legend>
+    <legend>下单用户信息录入(含<span style="color: red">*</span>为必填项)</legend>
 </fieldset>
 <form class="layui-form layui-form-pane" lay-filter="example" action="">
     <div class="layui-form-item">
         <div class="layui-inline">
-            <label class="layui-form-label">用户名</label>
+            <label class="layui-form-label"><span style="color: red">*</span>用户名</label>
             <div class="layui-input-inline">
                 <input type="text" id="username" name="username" lay-verify="required" placeholder="请输入"
                        autocomplete="off"
@@ -20,7 +20,7 @@
         </div>
     </div>
     <div class="layui-form-item">
-        <label class="layui-form-label">订单号</label>
+        <label class="layui-form-label"><span style="color: red">*</span>订单号</label>
         <div class="layui-input-inline">
             <input type="text" id="orderId" name="orderId" lay-verify="required" placeholder="请输入" autocomplete="off"
                    class="layui-input">
@@ -28,7 +28,7 @@
     </div>
     <div class="layui-form-item">
         <div class="layui-inline">
-            <label class="layui-form-label">日期选择</label>
+            <label class="layui-form-label"><span style="color: red">*</span>日期选择</label>
             <div class="layui-input-block">
                 <input type="text" name="orderDate" id="orderDate" lay-verify="required" autocomplete="off"
                        class="layui-input">
@@ -125,6 +125,7 @@
                 , dataType: 'json'
                 , data: JSON.stringify(userForm)
                 , success: function (result) {
+                    debugger;
                     if(result){
                         layer.alert("添加成功");
                     }else{

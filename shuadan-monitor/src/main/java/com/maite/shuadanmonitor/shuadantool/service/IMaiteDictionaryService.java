@@ -20,4 +20,13 @@ public interface IMaiteDictionaryService extends IService<MaiteDictionary> {
      * @return
      */
     public String queryKeyName(String type,String value);
+
+    //#region 获取字典列表数量 [getCount()]
+
+    /**
+     * 获取字典列表数量
+     * @return 返回分页字典列表数量
+     */
+    public int getCount();
+    //#endregion
 }

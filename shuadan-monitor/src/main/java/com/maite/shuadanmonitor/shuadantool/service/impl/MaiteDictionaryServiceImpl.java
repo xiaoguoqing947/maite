@@ -41,4 +41,15 @@ public class MaiteDictionaryServiceImpl extends ServiceImpl<MaiteDictionaryMappe
         }
         return keyName;
     }
+
+    @Override
+    public int getCount() {
+        int count = 0;
+        try {
+            count = maiteDictionaryMapper.selectCount(new QueryWrapper<>());
+        } catch (Exception ex) {
+            log.error("[getCount]查询数据列表总数异常", ex);
+        }
+        return count;
+    }
 }

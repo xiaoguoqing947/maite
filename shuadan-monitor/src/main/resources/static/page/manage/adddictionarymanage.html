@@ -1,0 +1,97 @@
+<table class="layui-hide" id="dicTable" lay-filter="dicTable"></table>
+<script type="text/html" id="toolbarDemo">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="add">添加</button>
+    </div>
+</script>
+<script type="text/html" id="barDemo">
+    <a class="layui-btn layui-btn-xs" lay-event="edit">修改</a>
+    <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+</script>
+
+<script>
+    layui.use('table', function () {
+        var table = layui.table;
+        table.render({
+            elem: '#dicTable'
+            , url: '/api/dictionary/queryList'
+            , toolbar: '#toolbarDemo'
+            , title: '用户数据表'
+            , cols: [[
+                {type: 'checkbox', fixed: 'left'}
+                , {field: 'id', title: 'ID', width: 80, fixed: 'left', unresize: true}
+                , {field: 'type', title: '字典类型', width: 120}
+                , {
+                    field: 'typeDesc', title: '字典类型描述', width: 150, edit: 'text', templet: function (res) {
+                        return '<em>' + res.typeDesc + '</em>'
+                    }
+                }
+                , {field: 'dcisValue', title: '字典值', width: 100, sort: true,}
+                , {field: 'keyName', title: '关键值', width: 80, edit: 'text'}
+                , {field: 'keyDesc', title: '关键值描述', width: 100, edit: 'text'}
+                , {field: 'remark', title: '备注信息', edit: 'text'}
+                , {fixed: 'right', title: '操作', toolbar: '#barDemo', width: 150}
+            ]]
+            , page: true
+        });
+
+        //工具栏事件
+        table.on('toolbar(dicTable)', function (obj) {
+            var checkStatus = table.checkStatus(obj.config.id);
+            switch (obj.event) {
+                case 'add':
+                    layer.msg(checkStatus.isAll ? '全选' : '未全选')
+                    break;
+            };
+        });
+
+        //监听行工具事件
+        table.on('tool(dicTable)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'del') {
+                layer.confirm('谨慎删除', function (index) {
+                    $.ajax({
+                        url: '/api/dictionary/delete'
+                        , type: 'post'
+                        , data: {
+                            "id" : data.id
+                        }
+                        , success: function (result) {
+                            if (result) {
+                                layer.alert("删除成功");
+                                pageVm.load('./page/manage/adddictionarymanage.html');
+                            } else {
+                                layer.alert("删除失败");
+                            }
+                        },
+                        error: function (error) {
+                            console.log(error)
+                        }
+                    });
+                    layer.close(index);
+                });
+            } else if (obj.event === 'edit') {
+                layer.confirm('确认更新？', function (index) {
+                    $.ajax({
+                        url: '/api/dictionary/update'
+                        , contentType: "application/json;charset=UTF-8"
+                        , type: 'post'
+                        , dataType: 'json'
+                        , data: JSON.stringify(data)
+                        , success: function (result) {
+                            if (result) {
+                                layer.alert("更新成功");
+                            } else {
+                                layer.alert("更新失败");
+                            }
+                        },
+                        error: function (error) {
+                            console.log(error)
+                        }
+                    });
+                    layer.close(index);
+                });
+            }
+        });
+    });
+</script>
