@@ -1,5 +1,6 @@
 package com.maite.shuadanmonitor.shuadantool.service.impl;
 
+import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -16,7 +17,9 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 
 import javax.annotation.Resource;
 import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -106,5 +109,41 @@ public class MaiteUserServiceImpl extends ServiceImpl<MaiteUserMapper, MaiteUser
         }catch (Exception e){
             log.error("[updateTimeByUserName]更新刷单时间异常",e);
         }
+    }
+
+    @Override
+    public List<String> queryCommentUserList() {
+        List<String> userNameList = new ArrayList<>();
+        try {
+            QueryWrapper<MaiteUser> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("IsArrive", 1).eq("IsComment", 0).select("UserName");;
+            Iterator<MaiteUser> iterator = maiteUserMapper.selectList(queryWrapper).iterator();
+            while(iterator.hasNext()) {
+                //iterator.next()返回迭代的下一个元素
+                userNameList.add(iterator.next().toString());
+            }
+        }catch (Exception e){
+            log.error("[queryCommentUserList]查询待评论的用户列表存在异常", e);
+        }
+        return userNameList;
+    }
+
+    @Override
+    public List<String> queryBugUserList() {
+        List<String> userNameList = new ArrayList<>();
+        try {
+            QueryWrapper<MaiteUser> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("IsArrive", 1).eq("IsComment", 1);
+            List<MaiteUser> maiteUsers = maiteUserMapper.selectList(queryWrapper);
+            Date today = new Date();
+            for (MaiteUser entity: maiteUsers) {
+                if((int) DateUtil.betweenDay(today, entity.getShuadanTime(), true) > 30){
+                    userNameList.add(entity.getUserName());
+                }
+            }
+        }catch (Exception e){
+            log.error("[queryBugUserList]查询可再次购买的用户列表", e);
+        }
+        return userNameList;
     }
 }

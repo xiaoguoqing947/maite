@@ -69,4 +69,21 @@ public interface IMaiteUserService extends IService<MaiteUser> {
     public void updateTimeByUserName(MaiteUser maiteUser);
     //#endregion
 
+    //#region 查询待评论的用户列表 [queryCommentUserList()]
+
+    /**
+     * 查询待评论的用户列表
+     */
+    public List<String> queryCommentUserList();
+    //#endregion
+
+
+    //#region 查询可再次购买的用户列表 [queryBugUserList()]
+
+    /**
+     * 查询可再次购买的用户列表
+     */
+    public List<String> queryBugUserList();
+    //#endregion
+
 }

@@ -52,6 +52,9 @@ public class AdminController {
         return "index";
     }
 
+    //#region 主界面数据加载
+
+
     @PostMapping("/api/admin")
     @ResponseBody
     public HashMap<String, Object> GetMainContentData(@RequestParam("page") int page, @RequestParam("size") int size) {
@@ -80,6 +83,19 @@ public class AdminController {
         return resultMap;
     }
 
+    @GetMapping("api/commentAndBudUserList")
+    @ResponseBody
+    public HashMap<String,Object> queryCommentAndBugUserList(){
+        HashMap<String,Object> resultMap = new HashMap<>();
+        List<String> commentUserList = maiteUserService.queryCommentUserList();
+        List<String> bugUserList =  maiteUserService.queryBugUserList();
+        resultMap.put("commentUserList",commentUserList);
+        resultMap.put("bugUserList",bugUserList);
+        return resultMap;
+    }
+    //#endregion
+
+    //#region 用户信息录入模块 [AddUserMessage(@RequestBody UserVoEntity userVoEntity) ]
     @Transactional
     @PostMapping("/api/addUserMessage")
     @ResponseBody
@@ -92,9 +108,9 @@ public class AdminController {
             maiteUser.setUserName(userName);
             maiteUser.setIsArrive(userVoEntity.getWuliuSwitch());
             maiteUser.setIsComment(userVoEntity.getCommentSwitch());
-            maiteUser.setShuadanTime(new Date());
             maiteUser.setRelation(userVoEntity.getRelation());
             maiteUser.setPhone(userVoEntity.getPhoneNumber());
+            maiteUser.setShuadanTime(userVoEntity.getOrderDate());
             if (!maiteUserService.judgeUserIsExist(userName)) {
                 //添加用户信息到maite_user表
                 maiteUserService.save(maiteUser);
@@ -103,6 +119,7 @@ public class AdminController {
                 maiteUserService.updateTimeByUserName(maiteUser);
             }
             int uin = maiteUserService.getUinByUserName(userName);
+            updateUser(maiteUser, userVoEntity.getOrderDate(), uin);
             MaiteOrderId orderIdEntity = new MaiteOrderId();
             orderIdEntity.setAddTime(userVoEntity.getOrderDate());
             orderIdEntity.setGoodId(userVoEntity.getGood());
@@ -117,6 +134,21 @@ public class AdminController {
         }
         return result;
     }
+
+
+    /**
+     * 更新用户表时间参数，更新的时间一定为用户最后下单的时间
+     *
+     * @param maiteUser
+     * @param addDate
+     */
+    private void updateUser(MaiteUser maiteUser, Date addDate, int uin) {
+        Date recentDate = maiteOrderIdService.queryRecentDate(uin);
+        if(DateUtil.compare(recentDate,addDate) < 0){
+            maiteUserService.updateTimeByUserName(maiteUser);
+        }
+    }
+    //#endregion
 
     @GetMapping("/api/updateState/{type}/{data}")
     @ResponseBody
@@ -140,12 +172,12 @@ public class AdminController {
     public HashMap<String, Object> queryUserGoodsMessageByOrderId(@PathVariable String orderId) {
         String goods = maiteOrderIdService.queryGoods(orderId);
         String[] goodArr = goods.split(",");
-        HashMap<String,Object> resultMap = new HashMap<>();
+        HashMap<String, Object> resultMap = new HashMap<>();
         List<String> goodNameList = new ArrayList<>();
-        for (int i = 0;i<goodArr.length;i++){
-            goodNameList.add(maiteDictionaryService.queryKeyName("good",goodArr[i]));
+        for (int i = 0; i < goodArr.length; i++) {
+            goodNameList.add(maiteDictionaryService.queryKeyName("good", goodArr[i]));
         }
-        resultMap.put("data",goodNameList);
+        resultMap.put("data", goodNameList);
         return resultMap;
     }
 }

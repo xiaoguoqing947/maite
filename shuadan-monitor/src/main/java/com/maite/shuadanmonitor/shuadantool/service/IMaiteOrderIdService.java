@@ -3,6 +3,8 @@ package com.maite.shuadanmonitor.shuadantool.service;
 import com.maite.shuadanmonitor.shuadantool.entity.MaiteOrderId;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.Date;
+
 /**
  * <p>
  *  服务类
@@ -26,4 +28,11 @@ public interface IMaiteOrderIdService extends IService<MaiteOrderId> {
      * @return
      */
     public String queryGoods(String orderId);
+
+    /**
+     * 根据uin获取用户添加订单的最新时间
+     * @param uin
+     * @return
+     */
+    public Date queryRecentDate(int uin);
 }

@@ -7,10 +7,10 @@
     </ul>
     <div class="layui-tab-content">
         <div class="layui-tab-item layui-show">
-            <div id="laydateDemo">小米<br>小红<br>小红<br></div>
+            <div id="bugDiv">小米<br>小红<br>小红<br></div>
         </div>
         <div class="layui-tab-item">
-            <div id="pageDemo">小红<br>小红<br>小红<br></div>
+            <div id="commentDiv">小红<br>小红<br>小红<br></div>
         </div>
     </div>
 </div>
@@ -34,6 +34,33 @@
            lay-filter="commentDome" {{ d.isComment== 1 ? 'checked' : '' }}>
 </script>
 <script>
+    function init() {
+        $.ajax({
+            url: "api/commentAndBudUserList"
+            , type: 'get'
+            , success: function (result) {
+                console.log(result)
+                var commentUserHtml = "";
+                var bugUserHtml = "";
+                for (var i = 0; i < result.commentUserList.length; i++) {
+                    commentUserHtml += "<span style='font-size: 20px'>" + result.commentUserList[i] + "</span><br/>"
+                }
+                for (var i = 0; i < result.bugUserList.length; i++) {
+                    bugUserHtml += "<span style='font-size: 20px'>" + result.bugUserList[i] + "</span><br/>"
+                }
+                $('#commentDiv').html(commentUserHtml);
+                $('#bugDiv').html(bugUserHtml);
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        init();
+    });
+
     //#region 点击订单编号，显示下单商品型号 [ShowGoodsModel(orderId)]
     function ShowGoodsModel(orderId) {
         var goodsName = "下单商品型号<br/>";
@@ -81,6 +108,7 @@
             }
         });
     }
+
     //#endregion
 
     //#region 表格数据加载
@@ -138,20 +166,20 @@
         form.on('switch(wuliuDome)', function (obj) {
             var uin = this.value;
             layer.confirm('确认是否到达！', {
-                icon:3,
-                title:"提示",
+                icon: 3,
+                title: "提示",
                 btn: ['确定', '否'],
-                cancel : function(){
+                cancel: function () {
                     // console.log("你点击右上角 X 取消后要做什么");
                 },
-                btn1:function(index){
+                btn1: function (index) {
                     var state = obj.elem.checked ? 1 : 0;
                     var data = state + "_" + uin;
                     $.ajax({
                         url: "api/updateState/IsArrive/" + data
                         , type: 'get'
                         , async: false
-                        ,success:function(result){
+                        , success: function (result) {
                             pageVm.load('./page/maitemainmanage.html');
                         },
                         error: function (error) {
@@ -160,7 +188,7 @@
                     });
                     layer.close(index);
                 },
-                btn2:function(index,layero){
+                btn2: function (index, layero) {
                     pageVm.load('./page/maitemainmanage.html');
                     layer.close(index);
                 }
@@ -172,20 +200,20 @@
         form.on('switch(commentDome)', function (obj) {
             var uin = this.value;
             layer.confirm('确认是否评论！', {
-                icon:3,
-                title:"提示",
+                icon: 3,
+                title: "提示",
                 btn: ['确定', '否'],
-                cancel : function(){
+                cancel: function () {
                     // console.log("你点击右上角 X 取消后要做什么");
                 },
-                btn1:function(index){
+                btn1: function (index) {
                     var state = obj.elem.checked ? 1 : 0;
                     var data = state + "_" + uin;
                     $.ajax({
                         url: "api/updateState/IsComment/" + data
                         , type: 'get'
                         , async: false
-                        ,success:function(result){
+                        , success: function (result) {
                             pageVm.load('./page/maitemainmanage.html');
                         },
                         error: function (error) {
@@ -194,7 +222,7 @@
                     });
                     layer.close(index);
                 },
-                btn2:function(index,layero){
+                btn2: function (index, layero) {
                     pageVm.load('./page/maitemainmanage.html');
                     layer.close(index);
                 }

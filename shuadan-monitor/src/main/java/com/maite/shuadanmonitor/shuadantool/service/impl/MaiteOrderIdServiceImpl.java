@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.text.MessageFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -57,5 +58,19 @@ public class MaiteOrderIdServiceImpl extends ServiceImpl<MaiteOrderIdMapper, Mai
             log.error("[queryGoods]查询商品信息异常", ex);
         }
         return goods;
+    }
+
+    @Override
+    public Date queryRecentDate(int uin) {
+        Date recentDate = null;
+        try {
+            QueryWrapper<MaiteOrderId> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("Uin", uin).orderByDesc("AddTime");
+            queryWrapper.last("LIMIT 1");
+            recentDate = maiteOrderIdMapper.selectOne(queryWrapper).getAddTime();
+        } catch (Exception ex) {
+            log.error("[queryRecentDate]根据uin获取用户添加订单的最新时间异常", ex);
+        }
+        return recentDate;
     }
 }
