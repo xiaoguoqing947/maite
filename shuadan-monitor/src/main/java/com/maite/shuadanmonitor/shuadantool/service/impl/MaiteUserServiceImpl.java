@@ -68,7 +68,9 @@ public class MaiteUserServiceImpl extends ServiceImpl<MaiteUserMapper, MaiteUser
     public int getCount() {
         int count = 0;
         try {
-            count = maiteUserMapper.selectCount(new QueryWrapper<>());
+            QueryWrapper<MaiteUser> queryWrapper = new QueryWrapper<>();
+            queryWrapper.ne("IsComment", 1);
+            count = maiteUserMapper.selectCount(queryWrapper);
         } catch (Exception ex) {
             log.error("[getCount]查询数据列表总数异常", ex);
         }
@@ -117,10 +119,9 @@ public class MaiteUserServiceImpl extends ServiceImpl<MaiteUserMapper, MaiteUser
         try {
             QueryWrapper<MaiteUser> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("IsArrive", 1).eq("IsComment", 0).select("UserName");;
-            Iterator<MaiteUser> iterator = maiteUserMapper.selectList(queryWrapper).iterator();
-            while(iterator.hasNext()) {
-                //iterator.next()返回迭代的下一个元素
-                userNameList.add(iterator.next().toString());
+            List<MaiteUser> list = maiteUserMapper.selectList(queryWrapper);
+            for (MaiteUser entity: list) {
+                userNameList.add(entity.getUserName());
             }
         }catch (Exception e){
             log.error("[queryCommentUserList]查询待评论的用户列表存在异常", e);

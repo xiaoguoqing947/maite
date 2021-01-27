@@ -1,3 +1,4 @@
+<h2><span style="color: red">特别说明：</span>点击订单编号即可查看用户购买的商品型号</h2>
 <table class="layui-hide" id="mainTable" lay-filter="mainTable"></table>
 
 <div class="layui-tab layui-tab-brief" lay-filter="demo">
@@ -43,10 +44,10 @@
                 var commentUserHtml = "";
                 var bugUserHtml = "";
                 for (var i = 0; i < result.commentUserList.length; i++) {
-                    commentUserHtml += "<span style='font-size: 20px'>" + result.commentUserList[i] + "</span><br/>"
+                    commentUserHtml += "<span style='font-size: 20px'>【" + result.commentUserList[i] + "】</span><br/>"
                 }
                 for (var i = 0; i < result.bugUserList.length; i++) {
-                    bugUserHtml += "<span style='font-size: 20px'>" + result.bugUserList[i] + "</span><br/>"
+                    bugUserHtml += "<span style='font-size: 20px'>【" + result.bugUserList[i] + "】</span><br/>"
                 }
                 $('#commentDiv').html(commentUserHtml);
                 $('#bugDiv').html(bugUserHtml);

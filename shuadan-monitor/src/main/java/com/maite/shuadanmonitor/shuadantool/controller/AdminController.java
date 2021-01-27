@@ -1,6 +1,7 @@
 package com.maite.shuadanmonitor.shuadantool.controller;
 
 import cn.hutool.core.date.DateUtil;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.maite.shuadanmonitor.shuadantool.entity.MaiteMainContentEntity;
 import com.maite.shuadanmonitor.shuadantool.entity.MaiteOrderId;
@@ -9,6 +10,8 @@ import com.maite.shuadanmonitor.shuadantool.entity.vo.UserVoEntity;
 import com.maite.shuadanmonitor.shuadantool.service.IMaiteDictionaryService;
 import com.maite.shuadanmonitor.shuadantool.service.IMaiteOrderIdService;
 import com.maite.shuadanmonitor.shuadantool.service.IMaiteUserService;
+import com.maite.shuadanmonitor.shuadantool.service.impl.MaiteOrderIdServiceImpl;
+import com.maite.shuadanmonitor.shuadantool.service.impl.MaiteUserServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,12 +88,12 @@ public class AdminController {
 
     @GetMapping("api/commentAndBudUserList")
     @ResponseBody
-    public HashMap<String,Object> queryCommentAndBugUserList(){
-        HashMap<String,Object> resultMap = new HashMap<>();
+    public HashMap<String, Object> queryCommentAndBugUserList() {
+        HashMap<String, Object> resultMap = new HashMap<>();
         List<String> commentUserList = maiteUserService.queryCommentUserList();
-        List<String> bugUserList =  maiteUserService.queryBugUserList();
-        resultMap.put("commentUserList",commentUserList);
-        resultMap.put("bugUserList",bugUserList);
+        List<String> bugUserList = maiteUserService.queryBugUserList();
+        resultMap.put("commentUserList", commentUserList);
+        resultMap.put("bugUserList", bugUserList);
         return resultMap;
     }
     //#endregion
@@ -144,7 +147,7 @@ public class AdminController {
      */
     private void updateUser(MaiteUser maiteUser, Date addDate, int uin) {
         Date recentDate = maiteOrderIdService.queryRecentDate(uin);
-        if(DateUtil.compare(recentDate,addDate) < 0){
+        if (DateUtil.compare(recentDate, addDate) < 0) {
             maiteUserService.updateTimeByUserName(maiteUser);
         }
     }
