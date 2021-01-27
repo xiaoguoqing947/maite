@@ -88,6 +88,24 @@
     }
 
     init();
+
+    $(function(){
+        var value = $("#username");
+        // 构建一个要执行的函数
+        function checkValue(){
+            //TODO 实现异步请求用户数据
+        }
+        // 定时器函数
+        function actionDo(){
+            return setInterval(function(){
+                // 插入要执行的函数
+                checkValue();
+            },2000); // 设定执行或延时时间
+        };
+        // 执行它
+        actionDo();
+    });
+
     layui.use(['form', 'layedit', 'laydate'], function () {
         var form = layui.form
             , layer = layui.layer
