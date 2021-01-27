@@ -20,3 +20,6 @@ logging:
   level:
     com.maite.shuadanmonitor.shuadantool: debug # 开启数据库执行语句打印在控制台
 #  config: classpath:logback-spring.xml #springboot 默认指定
+
+server:
+  port: 80
