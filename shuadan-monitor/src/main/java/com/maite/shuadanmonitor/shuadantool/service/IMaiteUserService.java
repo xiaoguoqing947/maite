@@ -86,4 +86,11 @@ public interface IMaiteUserService extends IService<MaiteUser> {
     public List<String> queryBugUserList();
     //#endregion
 
+    //#region 根据用户名查询相似用户名列表 [querySimilarUserName(String username)]
+
+    /**
+     * 根据用户名查询相似用户名列表
+     */
+    public List<String> querySimilarUserName(String userName);
+    //#endregion
 }

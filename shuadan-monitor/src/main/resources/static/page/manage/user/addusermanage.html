@@ -89,18 +89,34 @@
 
     init();
 
-    $(function(){
-        var value = $("#username");
+    $(function () {
         // 构建一个要执行的函数
-        function checkValue(){
-            //TODO 实现异步请求用户数据
+        function checkValue() {
+            var value = $("#username").val();
+            if (value === "" && value.length === 0) {
+                $.ajax({
+                    url: "/api/user/querySimilarUserName"
+                    , data: {
+                        username: value
+                    }
+                    , success: function (result) {
+                        debugger;
+                        console.log(result)
+                        //TODO 请求结果
+                    },
+                    error: function (error) {
+                        console.log(error)
+                    }
+                })
+            }
         }
+
         // 定时器函数
-        function actionDo(){
-            return setInterval(function(){
+        function actionDo() {
+            return setInterval(function () {
                 // 插入要执行的函数
                 checkValue();
-            },2000); // 设定执行或延时时间
+            }, 2000); // 设定执行或延时时间
         };
         // 执行它
         actionDo();
