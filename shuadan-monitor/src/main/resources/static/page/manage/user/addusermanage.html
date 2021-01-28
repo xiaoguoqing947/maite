@@ -1,3 +1,5 @@
+<div id="userNameListRadio">
+</div>
 <fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
     <legend>下单用户信息录入(含<span style="color: red">*</span>为必填项)</legend>
 </fieldset>
@@ -85,42 +87,31 @@
                 console.log(error)
             }
         });
+        $.ajax({
+            url: "/api/user/queryUserNameList"
+            , success: function (result) {
+                if (result.length > 0) {
+                    var strHtml = '';
+                    for (var i = 0; i < result.length; i++) {
+                        strHtml += '<a style="font-size: 18px" href="javascript:SetUserNameValue(`' + result[i] + '`)">【' + result[i] + '】</a>'
+                    }
+                    $('#userNameListRadio').html(strHtml);
+                    console.log(result);
+                } else {
+                    console.log("未找到匹配的值")
+                }
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        });
+    }
+
+    function SetUserNameValue(userName) {
+        $('#username').val(userName);
     }
 
     init();
-
-    $(function () {
-        // 构建一个要执行的函数
-        function checkValue() {
-            var value = $("#username").val();
-            if (value === "" && value.length === 0) {
-                $.ajax({
-                    url: "/api/user/querySimilarUserName"
-                    , data: {
-                        username: value
-                    }
-                    , success: function (result) {
-                        debugger;
-                        console.log(result)
-                        //TODO 请求结果
-                    },
-                    error: function (error) {
-                        console.log(error)
-                    }
-                })
-            }
-        }
-
-        // 定时器函数
-        function actionDo() {
-            return setInterval(function () {
-                // 插入要执行的函数
-                checkValue();
-            }, 2000); // 设定执行或延时时间
-        };
-        // 执行它
-        actionDo();
-    });
 
     layui.use(['form', 'layedit', 'laydate'], function () {
         var form = layui.form

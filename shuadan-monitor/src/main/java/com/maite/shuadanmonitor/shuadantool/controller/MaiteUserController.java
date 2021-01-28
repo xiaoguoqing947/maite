@@ -34,12 +34,10 @@ public class MaiteUserController {
 
 
     @ResponseBody
-    @GetMapping("/querySimilarUserName")
-    public List<String> querySimilarUserNameList(@RequestParam("username") String username){
+    @GetMapping("/queryUserNameList")
+    public List<String> queryUserNameList(){
         List<String> userNameList = null;
-        if(!StringUtils.isEmpty(username)){
-            userNameList = maiteUserService.querySimilarUserName(username);
-        }
+        userNameList = maiteUserService.queryUserNameList();
         return userNameList;
     }
 }

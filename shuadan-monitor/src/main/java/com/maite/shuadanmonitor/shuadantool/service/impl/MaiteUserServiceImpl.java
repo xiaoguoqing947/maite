@@ -149,17 +149,16 @@ public class MaiteUserServiceImpl extends ServiceImpl<MaiteUserMapper, MaiteUser
     }
 
     @Override
-    public List<String> querySimilarUserName(String userName) {
+    public List<String> queryUserNameList() {
         List<String> userNameList = new ArrayList<>();
         try {
             QueryWrapper<MaiteUser> queryWrapper = new QueryWrapper<>();
-            queryWrapper.like("UserName",userName);
             List<MaiteUser> maiteUsers = maiteUserMapper.selectList(queryWrapper);
             for (MaiteUser entity: maiteUsers) {
                     userNameList.add(entity.getUserName());
             }
         }catch (Exception e){
-            log.error("[querySimilarUserName]根据用户名查询相似用户名列表", e);
+            log.error("[queryUserNameList]根据用户名查询相似用户名列表", e);
         }
         return userNameList;
     }
