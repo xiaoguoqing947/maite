@@ -59,7 +59,7 @@ public class MaiteUserServiceImpl extends ServiceImpl<MaiteUserMapper, MaiteUser
             queryWrapper.last(MessageFormat.format("LIMIT {0},{1}", (page - 1) * size, size));
             maiteUsers = maiteUserMapper.selectList(queryWrapper);
         } catch (Exception ex) {
-            log.error("[getPageList]查询分页数据列表异常", ex);
+            log.error(MessageFormat.format("[getPageList]查询分页数据列表异常",page,size), ex);
         }
         return maiteUsers;
     }
@@ -84,7 +84,7 @@ public class MaiteUserServiceImpl extends ServiceImpl<MaiteUserMapper, MaiteUser
             queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("UserName", userName).select("Uin");
         }catch (Exception e){
-            log.error("[getUinByUserName]查询数据UIN异常", e);
+            log.error(MessageFormat.format("[getUinByUserName]查询数据UIN异常[UserName]{0}",userName), e);
         }
         return maiteUserMapper.selectOne(queryWrapper).getUin();
     }
@@ -96,7 +96,7 @@ public class MaiteUserServiceImpl extends ServiceImpl<MaiteUserMapper, MaiteUser
             queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("UserName", userName);
         }catch (Exception e){
-            log.error("[judgeUserIsExist]查询指定用户名是否存在异常", e);
+            log.error(MessageFormat.format("[judgeUserIsExist]查询指定用户名是否存在异常[UserName]{0}",userName), e);
         }
         return maiteUserMapper.selectOne(queryWrapper) != null;
     }
@@ -109,7 +109,7 @@ public class MaiteUserServiceImpl extends ServiceImpl<MaiteUserMapper, MaiteUser
             updateWrapper.eq("UserName", maiteUser.getUserName());
             maiteUserMapper.update(maiteUser,updateWrapper);
         }catch (Exception e){
-            log.error("[updateTimeByUserName]更新刷单时间异常",e);
+            log.error(MessageFormat.format("[updateTimeByUserName]更新刷单时间异常[MaiteUser]{0}",maiteUser.toString()),e);
         }
     }
 
@@ -124,7 +124,7 @@ public class MaiteUserServiceImpl extends ServiceImpl<MaiteUserMapper, MaiteUser
                 userNameList.add(entity.getUserName());
             }
         }catch (Exception e){
-            log.error("[queryCommentUserList]查询待评论的用户列表存在异常", e);
+            log.error("[queryCommentUserList]查询待评论的用户列表", e);
         }
         return userNameList;
     }

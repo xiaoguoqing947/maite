@@ -21,6 +21,7 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -132,7 +133,7 @@ public class AdminController {
             //#endregion
         } catch (Exception e) {
             result = false;
-            log.error("插入用户信息失败", e);
+            log.error(MessageFormat.format("[AddUserMessage]插入用户信息失败[UserVoEntity]{0}",userVoEntity.toString()), e);
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         }
         return result;

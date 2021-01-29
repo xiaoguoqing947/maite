@@ -41,7 +41,7 @@ public class MaiteOrderIdServiceImpl extends ServiceImpl<MaiteOrderIdMapper, Mai
             queryWrapper.last("LIMIT 1");
             orderIdEntity = maiteOrderIdMapper.selectOne(queryWrapper);
         } catch (Exception ex) {
-            log.error("[GetOrderId]查询订单编号异常", ex);
+            log.error(MessageFormat.format("[GetOrderId]查询订单编号异常[Uin]{0}",uin), ex);
         }
         return orderIdEntity;
     }
@@ -55,7 +55,7 @@ public class MaiteOrderIdServiceImpl extends ServiceImpl<MaiteOrderIdMapper, Mai
             queryWrapper.last("LIMIT 1");
             goods = maiteOrderIdMapper.selectOne(queryWrapper).getGoodId();
         } catch (Exception ex) {
-            log.error("[queryGoods]查询商品信息异常", ex);
+            log.error(MessageFormat.format("[queryGoods]查询商品信息异常[OrderId]{0}",orderId), ex);
         }
         return goods;
     }
@@ -69,7 +69,7 @@ public class MaiteOrderIdServiceImpl extends ServiceImpl<MaiteOrderIdMapper, Mai
             queryWrapper.last("LIMIT 1");
             recentDate = maiteOrderIdMapper.selectOne(queryWrapper).getAddTime();
         } catch (Exception ex) {
-            log.error("[queryRecentDate]根据uin获取用户添加订单的最新时间异常", ex);
+            log.error(MessageFormat.format("[queryRecentDate]根据uin获取用户添加订单的最新时间异常[Uin]{0}",uin), ex);
         }
         return recentDate;
     }
