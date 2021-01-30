@@ -17,7 +17,8 @@
 </div>
 
 <script type="text/html" id="orderIdTpl">
-    <a href='javascript:ShowGoodsModel(`{{ d.orderId }}`,`{{d.userName}}`)' class="layui-table-link"><strong>{{ d.orderId }}</strong></a>
+    <a href='javascript:ShowGoodsModel(`{{ d.orderId }}`,`{{d.userName}}`)' class="layui-table-link"><strong>{{
+        d.orderId }}</strong></a>
 </script>
 
 <script type="text/html" id="dayTpl">
@@ -44,10 +45,14 @@
                 var commentUserHtml = "";
                 var bugUserHtml = "";
                 for (var i = 0; i < result.commentUserList.length; i++) {
-                    commentUserHtml += "<span style='font-size: 20px'>【" + result.commentUserList[i] + "】</span><br/>"
+                    commentUserHtml += "<span style='font-size: 20px'>【" + result.commentUserList[i] + "】</span>";
+                    if (i % 5 === 0 && i !== 0){
+                        commentUserHtml += "<br/>";
+                    }
                 }
                 for (var i = 0; i < result.bugUserList.length; i++) {
-                    bugUserHtml += "<span style='font-size: 20px'>【" + result.bugUserList[i] + "】</span><br/>"
+                    bugUserHtml += "<span style='font-size: 20px'>【" + result.bugUserList[i] + "】</span>";
+                    if (i % 5 === 0 && i !== 0) bugUserHtml += "<br/>";
                 }
                 $('#commentDiv').html(commentUserHtml);
                 $('#bugDiv').html(bugUserHtml);
@@ -63,15 +68,15 @@
     });
 
     //#region 点击订单编号，显示下单商品型号 [ShowGoodsModel(orderId)]
-    function ShowGoodsModel(orderId,userName) {
-        var goodsName = "<strong>"+userName+"</strong> 下单的商品型号<br/>";
+    function ShowGoodsModel(orderId, userName) {
+        var goodsName = "<strong style='font-size: 20px'>" + userName + "</strong><br/><br/>";
         $.ajax({
             url: "api/queryGoods/" + orderId
             , type: 'get'
             , async: false
             , success: function (result) {
                 for (var i = 0; i < result.data.length; i++) {
-                    goodsName += "【" + result.data[i].keyName + "】"+result.data[i].keyDesc+"<br/>";
+                    goodsName += "【" + result.data[i].keyName + "】" + result.data[i].keyDesc + "<br/>";
                 }
             },
             error: function (error) {

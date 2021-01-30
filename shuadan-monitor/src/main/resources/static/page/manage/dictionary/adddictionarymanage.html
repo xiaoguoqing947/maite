@@ -42,16 +42,26 @@
 
         //工具栏事件
         table.on('toolbar(dicTable)', function (obj) {
-            var checkStatus = table.checkStatus(obj.config.id);
-            $.ajax({
-                url: 'api/dictionary/' + obj.event
-                , type: 'get'
-                , success: function (result) {
-                    layer.msg(result?"添加成功":"添加失败");
-                }
-                , error: function (error) {
-                    console.log(error)
-                }
+            layer.confirm('确认是否添加！！！', function (index) {
+                $.ajax({
+                    url: 'api/dictionary/' + obj.event
+                    , type: 'get'
+                    , success: function (result) {
+                        if(result){
+                            layer.msg("添加成功！");
+                            setTimeout(function () {
+                                pageVm.load('./page/manage/dictionary/adddictionarymanage.html');
+                            }, 1500);
+                        }else{
+                            layer.msg("添加失败！");
+                        }
+
+                    }
+                    , error: function (error) {
+                        console.log(error)
+                    }
+                });
+                layer.close(index);
             });
         });
 

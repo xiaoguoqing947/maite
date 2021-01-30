@@ -93,4 +93,12 @@ public interface IMaiteUserService extends IService<MaiteUser> {
      */
     public List<String> queryUserNameList();
     //#endregion
+
+    //#region 获取用户列表 [getUserList()]
+
+    /**
+     * 获取用户列表
+     */
+    public List<MaiteUser> getUserList();
+    //#endregion
 }

@@ -162,4 +162,9 @@ public class MaiteUserServiceImpl extends ServiceImpl<MaiteUserMapper, MaiteUser
         }
         return userNameList;
     }
+
+    @Override
+    public List<MaiteUser> getUserList() {
+        return maiteUserMapper.selectList(new QueryWrapper<>());
+    }
 }

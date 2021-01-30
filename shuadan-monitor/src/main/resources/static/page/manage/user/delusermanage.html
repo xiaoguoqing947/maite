@@ -1,0 +1,44 @@
+<div id="userDiv"></div>
+
+<script>
+    function initDelPage() {
+        $.ajax({
+            url: "/api/user/queryList"
+            , success: function (result) {
+                var strHtml = "";
+                $.each(result, function (index, item) {
+                    strHtml += "<a style='font-size: 25px' href='javascript:del(" + item.uin + ")'>【" + item.userName + "】</a>";
+                    if (index % 5 === 0 && index !== 0) strHtml += "</br>";
+                })
+                $('#userDiv').html(strHtml);
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        });
+    }
+
+    initDelPage();
+
+    function del(uin) {
+        layer.confirm('确认删除用户，请谨慎哦！！！', function (index) {
+            $.ajax({
+                url: "/api/user/delete/" + uin
+                , success: function (result) {
+                    if (result) {
+                        layer.msg("删除成功!");
+                        setTimeout(function () {
+                            pageVm.load('./page/manage/user/delusermanage.html');
+                        }, 1500);
+                    } else {
+                        layer.msg("删除失败!");
+                    }
+                },
+                error: function (error) {
+                    console.log(error)
+                }
+            });
+            layer.close(index);
+        });
+    }
+</script>
