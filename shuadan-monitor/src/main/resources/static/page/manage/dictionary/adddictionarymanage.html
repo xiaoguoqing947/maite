@@ -1,7 +1,8 @@
 <table class="layui-hide" id="dicTable" lay-filter="dicTable"></table>
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm" lay-event="add">添加</button>
+        <button class="layui-btn layui-btn-sm" lay-event="addGoodModule">添加商品模板</button>
+        <button class="layui-btn layui-btn-sm" lay-event="addGoodTypeModule">添加商品类别名称模板</button>
     </div>
 </script>
 <script type="text/html" id="barDemo">
@@ -42,11 +43,16 @@
         //工具栏事件
         table.on('toolbar(dicTable)', function (obj) {
             var checkStatus = table.checkStatus(obj.config.id);
-            switch (obj.event) {
-                case 'add':
-                    layer.msg(checkStatus.isAll ? '全选' : '未全选')
-                    break;
-            };
+            $.ajax({
+                url: 'api/dictionary/' + obj.event
+                , type: 'get'
+                , success: function (result) {
+                    layer.msg(result?"添加成功":"添加失败");
+                }
+                , error: function (error) {
+                    console.log(error)
+                }
+            });
         });
 
         //监听行工具事件
@@ -58,7 +64,7 @@
                         url: '/api/dictionary/delete'
                         , type: 'post'
                         , data: {
-                            "id" : data.id
+                            "id": data.id
                         }
                         , success: function (result) {
                             if (result) {

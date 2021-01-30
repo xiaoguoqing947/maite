@@ -17,7 +17,7 @@
 </div>
 
 <script type="text/html" id="orderIdTpl">
-    <a href='javascript:ShowGoodsModel(`{{ d.orderId }}`)' class="layui-table-link"><strong>{{ d.orderId }}</strong></a>
+    <a href='javascript:ShowGoodsModel(`{{ d.orderId }}`,`{{d.userName}}`)' class="layui-table-link"><strong>{{ d.orderId }}</strong></a>
 </script>
 
 <script type="text/html" id="dayTpl">
@@ -63,15 +63,15 @@
     });
 
     //#region 点击订单编号，显示下单商品型号 [ShowGoodsModel(orderId)]
-    function ShowGoodsModel(orderId) {
-        var goodsName = "下单商品型号<br/>";
+    function ShowGoodsModel(orderId,userName) {
+        var goodsName = "<strong>"+userName+"</strong> 下单的商品型号<br/>";
         $.ajax({
             url: "api/queryGoods/" + orderId
             , type: 'get'
             , async: false
             , success: function (result) {
                 for (var i = 0; i < result.data.length; i++) {
-                    goodsName += "【" + result.data[i] + "】<br/>";
+                    goodsName += "【" + result.data[i].keyName + "】"+result.data[i].keyDesc+"<br/>";
                 }
             },
             error: function (error) {

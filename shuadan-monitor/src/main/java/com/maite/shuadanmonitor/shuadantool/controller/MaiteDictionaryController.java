@@ -85,4 +85,33 @@ public class MaiteDictionaryController {
         }
         return result;
     }
+
+    @GetMapping("/{module}")
+    @ResponseBody
+    public Boolean addDictionaryModule(@PathVariable String module) {
+        boolean result = false;
+        String typeName = "";
+        String typeDesc = "";
+        MaiteDictionary maiteDictionary = new MaiteDictionary();
+        maiteDictionary.setKeyName("类型名");
+        maiteDictionary.setKeyDesc("类型描述");
+        if ("addGoodModule".equals(module)) {
+            typeName = "good";
+            typeDesc = "商品";
+        } else if ("addGoodTypeModule".equals(module)) {
+            maiteDictionary.setType("goodType");
+            typeName = "goodType";
+            typeDesc = "商品类别名称";
+        } else if ("addRelationModule".equals(module)) {
+            maiteDictionary.setType("relation");
+            typeName = "relation";
+            typeDesc = "关系";
+        }
+        maiteDictionary.setType(typeName);
+        int keyValue = maiteDictionaryService.queryDcisValue(typeName);
+        maiteDictionary.setDcisValue(keyValue);
+        maiteDictionary.setTypeDesc(typeDesc);
+        result = maiteDictionaryService.save(maiteDictionary);
+        return result;
+    }
 }

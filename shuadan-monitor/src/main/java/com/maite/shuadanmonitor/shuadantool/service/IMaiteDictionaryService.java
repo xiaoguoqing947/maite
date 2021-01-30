@@ -22,7 +22,7 @@ public interface IMaiteDictionaryService extends IService<MaiteDictionary> {
      * @param value
      * @return
      */
-    public String queryKeyName(String type,String value);
+    public MaiteDictionary queryKeyName(String type,String value);
 
     //#region 获取字典列表数量 [getCount()]
 
@@ -40,5 +40,14 @@ public interface IMaiteDictionaryService extends IService<MaiteDictionary> {
      * @return 返回分页字典列表
      */
     public List<MaiteDictionary> getPageList(int page, int size);
+    //#endregion
+
+    //#region 获取指定类型的字典唯一value值 [queryDcisValue(String typeName)]
+
+    /**
+     * 获取指定类型的字典唯一value值
+     * @return vlaue
+     */
+    public int queryDcisValue(String typeName);
     //#endregion
 }

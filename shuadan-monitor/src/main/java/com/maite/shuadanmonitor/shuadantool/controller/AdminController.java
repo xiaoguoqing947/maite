@@ -3,6 +3,7 @@ package com.maite.shuadanmonitor.shuadantool.controller;
 import cn.hutool.core.date.DateUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
+import com.maite.shuadanmonitor.shuadantool.entity.MaiteDictionary;
 import com.maite.shuadanmonitor.shuadantool.entity.MaiteMainContentEntity;
 import com.maite.shuadanmonitor.shuadantool.entity.MaiteOrderId;
 import com.maite.shuadanmonitor.shuadantool.entity.MaiteUser;
@@ -177,7 +178,7 @@ public class AdminController {
         String goods = maiteOrderIdService.queryGoods(orderId);
         String[] goodArr = goods.split(",");
         HashMap<String, Object> resultMap = new HashMap<>();
-        List<String> goodNameList = new ArrayList<>();
+        List<MaiteDictionary> goodNameList = new ArrayList<>();
         for (int i = 0; i < goodArr.length; i++) {
             goodNameList.add(maiteDictionaryService.queryKeyName("good", goodArr[i]));
         }

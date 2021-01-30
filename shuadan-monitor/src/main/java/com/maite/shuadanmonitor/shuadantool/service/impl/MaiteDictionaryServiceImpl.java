@@ -18,7 +18,7 @@ import java.util.List;
 
 /**
  * <p>
- *  服务实现类
+ * 服务实现类
  * </p>
  *
  * @author xgq
@@ -32,17 +32,17 @@ public class MaiteDictionaryServiceImpl extends ServiceImpl<MaiteDictionaryMappe
     private MaiteDictionaryMapper maiteDictionaryMapper;
 
     @Override
-    public String queryKeyName(String type, String value) {
-        String keyName = "";
+    public MaiteDictionary queryKeyName(String type, String value) {
+        MaiteDictionary dictionary = null;
         try {
             QueryWrapper<MaiteDictionary> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("Type", type).eq("DcisValue",value);
+            queryWrapper.eq("Type", type).eq("DcisValue", value);
             queryWrapper.last("LIMIT 1");
-            keyName = maiteDictionaryMapper.selectOne(queryWrapper).getKeyName();
+            dictionary = maiteDictionaryMapper.selectOne(queryWrapper);
         } catch (Exception ex) {
             log.error("[queryKeyName]查询商品信息异常", ex);
         }
-        return keyName;
+        return dictionary;
     }
 
     @Override
@@ -67,5 +67,18 @@ public class MaiteDictionaryServiceImpl extends ServiceImpl<MaiteDictionaryMappe
             log.error("[getPageList]查询分页数据列表异常", ex);
         }
         return maiteDictionaries;
+    }
+
+    @Override
+    public int queryDcisValue(String typeName) {
+        int result = 1;
+        try {
+            QueryWrapper<MaiteDictionary> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("Type", typeName).orderByDesc("DcisValue");
+            result = maiteDictionaryMapper.selectOne(queryWrapper).getDcisValue() + 1;
+        } catch (Exception ex) {
+            log.error("[queryDcisValue]获取指定类型的字典唯一value值", ex);
+        }
+        return result;
     }
 }
