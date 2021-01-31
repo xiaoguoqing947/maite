@@ -102,14 +102,14 @@ public class MaiteUserServiceImpl extends ServiceImpl<MaiteUserMapper, MaiteUser
     }
 
     @Override
-    public void updateTimeByUserName(MaiteUser maiteUser) {
+    public void updateByUserName(MaiteUser maiteUser) {
         UpdateWrapper<MaiteUser> updateWrapper = null;
         try {
             updateWrapper = new UpdateWrapper<>();
             updateWrapper.eq("UserName", maiteUser.getUserName());
             maiteUserMapper.update(maiteUser,updateWrapper);
         }catch (Exception e){
-            log.error(MessageFormat.format("[updateTimeByUserName]更新刷单时间异常[MaiteUser]{0}",maiteUser.toString()),e);
+            log.error(MessageFormat.format("[updateByUserName]更新刷单时间异常[MaiteUser]{0}",maiteUser.toString()),e);
         }
     }
 

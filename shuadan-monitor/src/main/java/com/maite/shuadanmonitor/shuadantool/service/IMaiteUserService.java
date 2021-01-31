@@ -61,12 +61,12 @@ public interface IMaiteUserService extends IService<MaiteUser> {
     public Boolean judgeUserIsExist(String userName);
     //#endregion
 
-    //#region 根据用户名更新用户刷单时间 [updateTimeByUserName(MaiteUser maiteUser)]
+    //#region 根据用户名更新用户刷单时间 [updateByUserName(MaiteUser maiteUser)]
 
     /**
      * 根据用户名更新用户刷单时间
      */
-    public void updateTimeByUserName(MaiteUser maiteUser);
+    public void updateByUserName(MaiteUser maiteUser);
     //#endregion
 
     //#region 查询待评论的用户列表 [queryCommentUserList()]

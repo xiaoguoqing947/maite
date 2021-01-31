@@ -120,17 +120,17 @@ public class AdminController {
                 //添加用户信息到maite_user表
                 maiteUserService.save(maiteUser);
             } else {
-                //更新用户下单时间
-                maiteUserService.updateTimeByUserName(maiteUser);
+                //更新用户信息
+                maiteUserService.updateByUserName(maiteUser);
             }
             int uin = maiteUserService.getUinByUserName(userName);
-            updateUser(maiteUser, userVoEntity.getOrderDate(), uin);
             MaiteOrderId orderIdEntity = new MaiteOrderId();
             orderIdEntity.setAddTime(userVoEntity.getOrderDate());
             orderIdEntity.setGoodId(userVoEntity.getGood());
             orderIdEntity.setOrderId(userVoEntity.getOrderId());
             orderIdEntity.setUin(uin);
             maiteOrderIdService.save(orderIdEntity);
+            updateUserRecentTime(maiteUser, userVoEntity.getOrderDate(), uin);
             //#endregion
         } catch (Exception e) {
             result = false;
@@ -147,10 +147,10 @@ public class AdminController {
      * @param maiteUser
      * @param addDate
      */
-    private void updateUser(MaiteUser maiteUser, Date addDate, int uin) {
+    private void updateUserRecentTime(MaiteUser maiteUser, Date addDate, int uin) {
         Date recentDate = maiteOrderIdService.queryRecentDate(uin);
         if (DateUtil.compare(recentDate, addDate) < 0) {
-            maiteUserService.updateTimeByUserName(maiteUser);
+            maiteUserService.updateByUserName(maiteUser);
         }
     }
     //#endregion
