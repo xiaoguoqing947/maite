@@ -1,8 +1,8 @@
 <table class="layui-hide" id="dicTable" lay-filter="dicTable"></table>
 <script type="text/html" id="toolbarDemo">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm" lay-event="addGoodModule">添加商品模板</button>
-        <button class="layui-btn layui-btn-sm" lay-event="addGoodTypeModule">添加商品类别名称模板</button>
+        <button class="layui-btn layui-btn-sm" lay-event="addGoodModule">添加【商品模板】</button>
+        <button class="layui-btn layui-btn-sm" lay-event="addGoodTypeModule">添加【商品分类模板】</button>
     </div>
 </script>
 <script type="text/html" id="barDemo">
@@ -12,6 +12,7 @@
 
 <script>
     layui.use('table', function () {
+        //#region 页面数据初始化
         var table = layui.table;
         table.render({
             elem: '#dicTable'
@@ -39,20 +40,22 @@
                 , limitName: 'size' //每页数据量的参数名，默认：limit
             }
         });
+        //#endregion
 
-        //工具栏事件
+        //#region 工具栏事件
+
         table.on('toolbar(dicTable)', function (obj) {
             layer.confirm('确认是否添加！！！', function (index) {
                 $.ajax({
                     url: 'api/dictionary/' + obj.event
                     , type: 'get'
                     , success: function (result) {
-                        if(result){
+                        if (result) {
                             layer.msg("添加成功！");
                             setTimeout(function () {
                                 pageVm.load('./page/manage/dictionary/adddictionarymanage.html');
                             }, 1500);
-                        }else{
+                        } else {
                             layer.msg("添加失败！");
                         }
 
@@ -113,5 +116,6 @@
                 });
             }
         });
+        //#endregion
     });
 </script>
