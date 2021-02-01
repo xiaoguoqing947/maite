@@ -75,6 +75,7 @@ public class MaiteDictionaryServiceImpl extends ServiceImpl<MaiteDictionaryMappe
         try {
             QueryWrapper<MaiteDictionary> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("Type", typeName).orderByDesc("DcisValue");
+            queryWrapper.last("LIMIT 1");
             result = maiteDictionaryMapper.selectOne(queryWrapper).getDcisValue() + 1;
         } catch (Exception ex) {
             log.error("[queryDcisValue]获取指定类型的字典唯一value值", ex);
