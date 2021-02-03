@@ -1,0 +1,35 @@
+CREATE TABLE `maite_user` (
+  `Uin` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户唯一值',
+  `UserName` varchar(128) NOT NULL DEFAULT '' COMMENT '用户名',
+  `Phone` varchar(11) DEFAULT '' COMMENT '联系电话',
+  `Relation` tinyint(3) NOT NULL DEFAULT '1' COMMENT '与用户关系',
+  `IsArrive` tinyint(3) NOT NULL DEFAULT '1' COMMENT '物流是否到达',
+  `IsComment` tinyint(3) NOT NULL DEFAULT '1' COMMENT '订单是否评论',
+  `ShuadanTime` datetime NOT NULL COMMENT '刷单时间',
+  PRIMARY KEY (`Uin`),
+  KEY `idx_username` (`UserName`),
+  KEY `idx_phone` (`Phone`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 MAX_ROWS=4294967295;
+
+CREATE TABLE `maite_order_id` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+  `Uin` int(11) NOT NULL COMMENT '用户Uin',
+  `OrderId` varchar(11) NOT NULL DEFAULT '' COMMENT '订单编号',
+  `GoodId` varchar(255) NOT NULL DEFAULT '1' COMMENT '商品ID',
+  `AddTime` datetime NOT NULL COMMENT '添加时间',
+  PRIMARY KEY (`Id`),
+  KEY `idx_uin` (`Uin`),
+  KEY `idx_order_id` (`OrderId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 MAX_ROWS=4294967295
+
+CREATE TABLE `maite_dictionary` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT COMMENT '自增ID',
+  `Type` varchar(64) DEFAULT '' COMMENT '数字字典类型',
+  `TypeDesc` varchar(128) DEFAULT '' COMMENT '数字字典类型描述',
+  `DcisValue` int(11) DEFAULT NULL COMMENT '字典值',
+  `KeyName` varchar(128) DEFAULT '' COMMENT '字典key',
+  `KeyDesc` varchar(255) DEFAULT '' COMMENT '字典key描述',
+  `Remark` varchar(128) DEFAULT NULL COMMENT '字典标记',
+  PRIMARY KEY (`Id`),
+  KEY `idx_type_dcisvalue` (`Type`,`DcisValue`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 MAX_ROWS=4294967295
