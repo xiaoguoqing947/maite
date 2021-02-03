@@ -4,7 +4,7 @@
             <div class="layui-card-header">
                 <form class="layui-form layui-form-pane" lay-filter="example" action="">
                     <div class="layui-form-item" style="text-align: center">
-                        <label class="layui-form-label" style="margin-left: 10px;width: 200px">选择需要上传图片的商品</label>
+                        <label class="layui-form-label">选择商品</label>
                         <div class="layui-input-inline">
                             <select id="goodSelect" name="goodSelect" lay-search="" onchange="changeGoodId()">
                             </select>
@@ -42,7 +42,7 @@
                         strHtml += '<option value="' + result[i].dcisValue + '">' + result[i].keyName + '</option>';
                         showImageHtml += '    <div class="layui-col-md2">\n' +
                             '        <div class="layui-card">\n' +
-                            '            <div class="layui-card-header" style="text-align: center">' + result[i].keyName + '</div>\n' +
+                            '            <div class="layui-card-header" style="text-align: center">【' + result[i].keyName + '】</div>\n' +
                             '            <div class="layui-card-body">\n' +
                             '                <img class="layui-upload-img" width="100%" height="100%"\n' +
                             '                     src="' + result[i].remark + '">\n' +

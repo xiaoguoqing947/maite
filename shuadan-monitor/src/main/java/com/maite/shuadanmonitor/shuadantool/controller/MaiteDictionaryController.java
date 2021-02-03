@@ -132,8 +132,8 @@ public class MaiteDictionaryController {
             resultMap.put("code", 1);
         } else {
             String fileName = file.getOriginalFilename();
-            String suffixName = fileName.substring(fileName.lastIndexOf("."));
-            fileName = UUID.randomUUID() + suffixName;
+//            String suffixName = fileName.substring(fileName.lastIndexOf("."));
+//            fileName = UUID.randomUUID() + suffixName;
             String filePath = System.getProperty("user.dir") + "/src/main/resources/static/images/goods/";
             File dest = new File(filePath + fileName);
             try {
