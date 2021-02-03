@@ -1,30 +1,45 @@
-<div class="layui-row">
-    <div class="layui-col-md4 layui-col-md-offset4">
-        <div class="layui-card">
-            <div class="layui-card-header">
-                <form class="layui-form layui-form-pane" lay-filter="example" action="">
-                    <div class="layui-form-item" style="text-align: center">
-                        <label class="layui-form-label">选择商品</label>
-                        <div class="layui-input-inline">
-                            <select id="goodSelect" name="goodSelect" lay-search="" onchange="changeGoodId()">
-                            </select>
+<style type="text/css">
+    .fixDiv {
+        background-color: white;
+        overflow: hidden;
+        z-index: 9998;
+        position: fixed;
+        text-align: center;
+        width: 100%;
+        height: 130px;
+        margin-top: -15px;
+    }
+</style>
+
+<div class="fixDiv">
+    <div class="layui-row scll" style="margin-top: 10px;">
+        <div class="layui-col-md4 layui-col-md-offset3">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    <form class="layui-form layui-form-pane" lay-filter="example" action="">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">选择商品</label>
+                            <div class="layui-input-inline">
+                                <select id="goodSelect" name="goodSelect" lay-search="">
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                </form>
-            </div>
-            <div class="layui-card-body" style="text-align: center">
-                <div class="layui-upload">
-                    <button type="button" class="layui-btn" id="uploadPic">上传图片</button>
-                    <div class="layui-upload-list">
-                        <img class="layui-upload-img" width="50%" height="50%" id="picShow">
-                        <p id="reUploadPic"></p>
+                    </form>
+                </div>
+                <div class="layui-card-body" style="text-align: center">
+                    <div class="layui-upload">
+                        <button type="button" class="layui-btn" id="uploadPic">上传图片</button>
+                        <div class="layui-upload-list">
+                            <img class="layui-upload-img" width="50%" height="50%" id="picShow">
+                            <p id="reUploadPic"></p>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-<div class="layui-row" id="imageShowDiv">
+<div class="layui-row" id="imageShowDiv" style="margin-top: 130px">
 </div>
 
 <script>
@@ -37,18 +52,24 @@
             , success: function (result) {
                 var strHtml = "<option value=\"\">直接选择或搜索选择</option>";
                 var showImageHtml = '';
+                var goodName = '';
+                var goodValue = '';
                 for (var i = 0; i < result.length; i++) {
                     if (result[i].type === "good") {
-                        strHtml += '<option value="' + result[i].dcisValue + '">' + result[i].keyName + '</option>';
-                        showImageHtml += '    <div class="layui-col-md2">\n' +
-                            '        <div class="layui-card">\n' +
-                            '            <div class="layui-card-header" style="text-align: center">【' + result[i].keyName + '】</div>\n' +
-                            '            <div class="layui-card-body">\n' +
-                            '                <img class="layui-upload-img" width="100%" height="100%"\n' +
-                            '                     src="' + result[i].remark + '">\n' +
-                            '            </div>\n' +
-                            '        </div>\n' +
-                            '    </div>';
+                        goodName = result[i].keyName;
+                        goodValue = result[i].dcisValue;
+                        if (goodName.length > 0) {
+                            strHtml += '<option value="' + goodValue + '">' + goodName + '</option>';
+                            showImageHtml += '    <div class="layui-col-md2">\n' +
+                                '        <div class="layui-card">\n' +
+                                '            <div class="layui-card-header" style="text-align: center">【' + goodName + '】</div>\n' +
+                                '            <div class="layui-card-body">\n' +
+                                '                <img class="layui-upload-img" width="100%" height="100%"\n' +
+                                '                     src="' + result[i].remark + '">\n' +
+                                '            </div>\n' +
+                                '        </div>\n' +
+                                '    </div>';
+                        }
                     }
                 }
                 $('#goodSelect').html(strHtml);

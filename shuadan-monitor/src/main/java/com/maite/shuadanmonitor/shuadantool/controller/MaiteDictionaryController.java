@@ -98,8 +98,7 @@ public class MaiteDictionaryController {
         String typeName = "";
         String typeDesc = "";
         MaiteDictionary maiteDictionary = new MaiteDictionary();
-        maiteDictionary.setKeyName("类型名");
-        maiteDictionary.setKeyDesc("类型描述");
+        maiteDictionary.setKeyDesc("【待填写】");
         if ("addGoodModule".equals(module)) {
             typeName = "good";
             typeDesc = "商品";
