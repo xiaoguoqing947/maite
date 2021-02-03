@@ -4,6 +4,7 @@ package com.maite.shuadanmonitor.shuadantool.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.maite.shuadanmonitor.shuadantool.entity.MaiteDictionary;
+import com.maite.shuadanmonitor.shuadantool.entity.MaiteUser;
 import com.maite.shuadanmonitor.shuadantool.service.IMaiteDictionaryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,9 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * <p>
@@ -39,7 +44,7 @@ public class MaiteDictionaryController {
             QueryWrapper<MaiteDictionary> queryWrapper = new QueryWrapper<>();
             list = maiteDictionaryService.list(queryWrapper);
         } catch (Exception e) {
-            log.error("查询字典列表异常", e);
+            log.error("[GetDicTypeData]查询字典列表异常", e);
         }
         return list;
     }
@@ -113,5 +118,41 @@ public class MaiteDictionaryController {
         maiteDictionary.setTypeDesc(typeDesc);
         result = maiteDictionaryService.save(maiteDictionary);
         return result;
+    }
+
+    @PostMapping("/uploadFile")
+    @ResponseBody
+    public HashMap<String, Object> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("goodId") String goodId) {
+        HashMap<String, Object> resultMap = new HashMap<>();
+        if (file.isEmpty()) {
+            resultMap.put("msg", "上传失败，请选择文件");
+            resultMap.put("code", 1);
+        } else if (goodId.isEmpty()) {
+            resultMap.put("msg", "请选择指定商品");
+            resultMap.put("code", 1);
+        } else {
+            String fileName = file.getOriginalFilename();
+            String suffixName = fileName.substring(fileName.lastIndexOf("."));
+            fileName = UUID.randomUUID() + suffixName;
+            String filePath = System.getProperty("user.dir") + "/src/main/resources/static/images/goods/";
+            File dest = new File(filePath + fileName);
+            try {
+                file.transferTo(dest);
+                UpdateWrapper<MaiteDictionary> updateWrapper = new UpdateWrapper<>();
+                MaiteDictionary maiteDictionary = new MaiteDictionary();
+                maiteDictionary.setRemark("/images/goods/" + fileName);
+                updateWrapper.eq("Type", "good");
+                updateWrapper.eq("DcisValue", goodId);
+                maiteDictionaryService.update(maiteDictionary, updateWrapper);
+                resultMap.put("msg", "上传成功");
+                resultMap.put("code", 0);
+            } catch (IOException e) {
+                log.error("[uploadFile]上传文件异常", e);
+            } catch (Exception ex) {
+                log.error("[uploadFile]更新商品Remark信息异常", ex);
+            }
+
+        }
+        return resultMap;
     }
 }

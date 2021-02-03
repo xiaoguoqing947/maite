@@ -1,1 +1,101 @@
-<h1 style="text-align: center">Good Pictrue Show!!!</h1>
+<div class="layui-row">
+    <div class="layui-col-md4 layui-col-md-offset4">
+        <div class="layui-card">
+            <div class="layui-card-header">
+                <form class="layui-form layui-form-pane" lay-filter="example" action="">
+                    <div class="layui-form-item" style="text-align: center">
+                        <label class="layui-form-label" style="margin-left: 10px;width: 200px">选择需要上传图片的商品</label>
+                        <div class="layui-input-inline">
+                            <select id="goodSelect" name="goodSelect" lay-search="" onchange="changeGoodId()">
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="layui-card-body" style="text-align: center">
+                <div class="layui-upload">
+                    <button type="button" class="layui-btn" id="uploadPic">上传图片</button>
+                    <div class="layui-upload-list">
+                        <img class="layui-upload-img" width="50%" height="50%" id="picShow">
+                        <p id="reUploadPic"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="layui-row" id="imageShowDiv">
+</div>
+
+<script>
+    layui.use(['form', 'layedit', 'laydate'], function () {
+
+        var form = layui.form
+            , layer = layui.layer
+        $.ajax({
+            url: "api/dictionary/GetDicTypeData"
+            , success: function (result) {
+                var strHtml = "<option value=\"\">直接选择或搜索选择</option>";
+                var showImageHtml = '';
+                for (var i = 0; i < result.length; i++) {
+                    if (result[i].type === "good") {
+                        strHtml += '<option value="' + result[i].dcisValue + '">' + result[i].keyName + '</option>';
+                        showImageHtml += '    <div class="layui-col-md2">\n' +
+                            '        <div class="layui-card">\n' +
+                            '            <div class="layui-card-header" style="text-align: center">' + result[i].keyName + '</div>\n' +
+                            '            <div class="layui-card-body">\n' +
+                            '                <img class="layui-upload-img" width="100%" height="100%"\n' +
+                            '                     src="' + result[i].remark + '">\n' +
+                            '            </div>\n' +
+                            '        </div>\n' +
+                            '    </div>';
+                    }
+                }
+                $('#goodSelect').html(strHtml);
+                $('#imageShowDiv').html(showImageHtml);
+                form.render();
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        })
+    });
+
+    layui.use('upload', function () {
+        var upload = layui.upload;
+        var uploadInst = upload.render({
+            elem: '#uploadPic'
+            , url: '/api/dictionary/uploadFile'
+            , type: 'post'
+            , data: {
+                goodId: function () {
+                    return $('#goodSelect').val();
+                }
+            }
+            , before: function (obj) {
+                obj.preview(function (index, file, result) {
+                    layui.jquery('#picShow').attr('src', result); //图片链接（base64）
+                });
+            }
+            , done: function (res) {
+                console.log(res)
+                if (res.code > 0) {
+                    return layer.msg(res.msg);
+                }
+                setTimeout(function () {
+                    pageVm.load('./page/manage/good/goodpicturemanage.html');
+                }, 250);
+            }
+            , error: function () {
+                //演示失败状态，并实现重传
+                var reUploadPic = layui.jquery('#reUploadPic');
+                reUploadPic.html('<span style="color: #FF5722;">上传失败</span> <a class="layui-btn layui-btn-xs demo-reload">重试</a>');
+                reUploadPic.find('.demo-reload').on('click', function () {
+                    uploadInst.upload();
+                });
+            }
+            , size: 1024
+        });
+    });
+
+</script>
