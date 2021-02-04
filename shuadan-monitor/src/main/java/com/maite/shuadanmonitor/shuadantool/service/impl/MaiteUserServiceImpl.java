@@ -51,11 +51,13 @@ public class MaiteUserServiceImpl extends ServiceImpl<MaiteUserMapper, MaiteUser
     }
 
     @Override
-    public List<MaiteUser> getPageList(int page, int size) {
+    public List<MaiteUser> getPageList(int page, int size,String isComment) {
         List<MaiteUser> maiteUsers = null;
         try {
             QueryWrapper<MaiteUser> queryWrapper = new QueryWrapper<>();
-            queryWrapper.ne("IsComment", 1);
+            if(!isComment.isEmpty()){
+                queryWrapper.ne("IsComment", 1);
+            }
             queryWrapper.last(MessageFormat.format("LIMIT {0},{1}", (page - 1) * size, size));
             maiteUsers = maiteUserMapper.selectList(queryWrapper);
         } catch (Exception ex) {
@@ -65,11 +67,13 @@ public class MaiteUserServiceImpl extends ServiceImpl<MaiteUserMapper, MaiteUser
     }
 
     @Override
-    public int getCount() {
+    public int getCount(String isComment) {
         int count = 0;
         try {
             QueryWrapper<MaiteUser> queryWrapper = new QueryWrapper<>();
-            queryWrapper.ne("IsComment", 1);
+            if(!isComment.isEmpty()){
+                queryWrapper.ne("IsComment", 1);
+            }
             count = maiteUserMapper.selectCount(queryWrapper);
         } catch (Exception ex) {
             log.error("[getCount]查询数据列表总数异常", ex);

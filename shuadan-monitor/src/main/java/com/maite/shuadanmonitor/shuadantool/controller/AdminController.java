@@ -65,8 +65,8 @@ public class AdminController {
     public HashMap<String, Object> GetMainContentData(@RequestParam("page") int page, @RequestParam("size") int size) {
         List<MaiteMainContentEntity> list = new ArrayList<>();
         // 获取用户信息
-        int totalCount = maiteUserService.getCount();
-        List<MaiteUser> maiteUserList = maiteUserService.getPageList(page, size);
+        int totalCount = maiteUserService.getCount("1");
+        List<MaiteUser> maiteUserList = maiteUserService.getPageList(page, size, "1");
         MaiteOrderId orderIdEntity = null;
         for (MaiteUser item : maiteUserList) {
             orderIdEntity = maiteOrderIdService.GetOrderId(item.getUin());
@@ -134,7 +134,7 @@ public class AdminController {
             //#endregion
         } catch (Exception e) {
             result = false;
-            log.error(MessageFormat.format("[AddUserMessage]插入用户信息失败[UserVoEntity]{0}",userVoEntity.toString()), e);
+            log.error(MessageFormat.format("[AddUserMessage]插入用户信息失败[UserVoEntity]{0}", userVoEntity.toString()), e);
             TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
         }
         return result;

@@ -36,6 +36,7 @@
            lay-filter="commentDome" {{ d.isComment== 1 ? 'checked' : '' }}>
 </script>
 <script>
+    //#region   页面初始化
     function init() {
         $.ajax({
             url: "api/commentAndBudUserList"
@@ -66,6 +67,7 @@
     $(document).ready(function () {
         init();
     });
+    //#endregion
 
     //#region 点击订单编号，显示下单商品型号 [ShowGoodsModel(orderId)]
     function ShowGoodsModel(orderId, userName) {
@@ -77,6 +79,7 @@
             , success: function (result) {
                 for (var i = 0; i < result.data.length; i++) {
                     goodsName += "【" + result.data[i].keyName + "】" + result.data[i].keyDesc + "<br/>";
+                    goodsName += '<img class="layui-upload-img" width="150px" height="150px" src="' + result.data[i].remark + '"><br/>';
                 }
             },
             error: function (error) {
@@ -97,21 +100,13 @@
             ,
             id: 'LAY_layuipro' //设定一个id，防止重复弹出
             ,
-            btn: ['查看商品图片', '已查看']
+            btn: ['已查看']
             ,
             btnAlign: 'c'
             ,
             moveType: 1 //拖拽模式，0或者1
             ,
             content: modelHtml
-            ,
-            success: function (layero) {
-                var btn = layero.find('.layui-layer-btn');
-                btn.find('.layui-layer-btn0').attr({
-                    href: './page/manage/good/goodpicturemanage.html'
-                    , target: '_blank'
-                });
-            }
         });
     }
 
@@ -128,7 +123,6 @@
             , url: '/api/admin'
             , cellMinWidth: 80
             , parseData: function (res) { //res 即为原始返回的数据
-                console.log(res)
                 return {
                     "code": res.code, //解析接口状态
                     "msg": res.msg, //解析提示文本

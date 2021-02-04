@@ -1,6 +1,7 @@
 package com.maite.shuadanmonitor.shuadantool.controller;
 
 
+import cn.hutool.core.date.DateUtil;
 import com.maite.shuadanmonitor.shuadantool.entity.MaiteUser;
 import com.maite.shuadanmonitor.shuadantool.service.IMaiteOrderIdService;
 import com.maite.shuadanmonitor.shuadantool.service.IMaiteUserService;
@@ -64,5 +65,18 @@ public class MaiteUserController {
             log.error("[delete]删除指定用的信息", e);
         }
         return result;
+    }
+
+    @ResponseBody
+    @PostMapping("/queryTableList")
+    public HashMap<String, Object> queryList(@RequestParam("page") int page, @RequestParam("size") int size) {
+        HashMap<String, Object> resultMap = new HashMap<>();
+        int totalCount = maiteUserService.getCount("");
+        List<MaiteUser> list = maiteUserService.getPageList(page, size,"");
+        resultMap.put("code", 0);
+        resultMap.put("msg", "查询列表成功");
+        resultMap.put("data", list);
+        resultMap.put("count", totalCount);
+        return resultMap;
     }
 }

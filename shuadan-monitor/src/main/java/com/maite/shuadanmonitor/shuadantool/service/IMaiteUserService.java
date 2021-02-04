@@ -31,7 +31,7 @@ public interface IMaiteUserService extends IService<MaiteUser> {
      * 获取分页用户列表
      * @return 返回分页用户列表
      */
-    public List<MaiteUser> getPageList(int page,int size);
+    public List<MaiteUser> getPageList(int page,int size,String isComment);
     //#endregion
 
     //#region 获取用户列表数量 [getCount()]
@@ -40,7 +40,7 @@ public interface IMaiteUserService extends IService<MaiteUser> {
      * 获取用户列表数量
      * @return 返回分页用户列表数量
      */
-    public int getCount();
+    public int getCount(String isComment);
     //#endregion
 
     //#region 根据用户名获取用户Uin [getUinByUserName(String userName)]
