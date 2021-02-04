@@ -45,21 +45,24 @@
 </div>
 
 <script>
+    //#region 输入框自动提示功能
     var goodList = new Array();
     function search() {
         $("#goodList").empty();
         var good_name = $('#goodName').val();
-        for (i = 1; i < goodList.length; ++i) {
+        for (var i = 0; i < goodList.length; ++i) {
             if (good_name != "" && goodList[i].match(good_name + ".*") != null) {
                 var option = "<option>" + goodList[i] + "</option>";
                 $("#goodList").append(option);
             }
         }
     }
+    //#endregion
+
+    //#region 表单刷新事件
 
     layui.use(['form', 'layedit', 'laydate'], function () {
         var form = layui.form
-            , layer = layui.layer
         $.ajax({
             url: "api/dictionary/GetDicTypeData"
             , success: function (result) {
@@ -85,14 +88,15 @@
                     }
                 }
                 $('#imageShowDiv').html(showImageHtml);
-                form.render();
             },
             error: function (error) {
                 console.log(error)
             }
         })
     });
+    //#endregion
 
+    //#region 文件上传事件
     layui.use('upload', function () {
         var upload = layui.upload;
         var uploadInst = upload.render({
@@ -100,8 +104,8 @@
             , url: '/api/dictionary/uploadFile'
             , type: 'post'
             , data: {
-                goodId: function () {
-                    return $('#goodSelect').val();
+                goodName: function () {
+                    return $('#goodName').val();
                 }
             }
             , before: function (obj) {
@@ -129,5 +133,5 @@
             , size: 1024
         });
     });
-
+    //#endregion
 </script>

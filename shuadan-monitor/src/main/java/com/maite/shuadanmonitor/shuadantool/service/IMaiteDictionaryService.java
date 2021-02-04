@@ -50,4 +50,13 @@ public interface IMaiteDictionaryService extends IService<MaiteDictionary> {
      */
     public int queryDcisValue(String typeName);
     //#endregion
+
+    //#region 根据字典表关键keyName判定是否已存在重复的命名 [queryKeyNameIsExist(String keyName)]
+
+    /**
+     * 根据字典表关键keyName判定是否已存在重复的命名
+     * @return vlaue
+     */
+    public Boolean queryKeyNameIsExist(String keyName);
+    //#endregion
 }

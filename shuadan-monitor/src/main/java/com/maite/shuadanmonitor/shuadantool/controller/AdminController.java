@@ -155,23 +155,6 @@ public class AdminController {
     }
     //#endregion
 
-    @GetMapping("/api/updateState/{type}/{data}")
-    @ResponseBody
-    public Boolean lockUser(@PathVariable String type, @PathVariable String data) {
-        //data: 值_用户名UIN
-        String[] arr = data.split("_");
-        UpdateWrapper<MaiteUser> updateWrapper = new UpdateWrapper<>();
-        MaiteUser maiteUser = new MaiteUser();
-        if (type.equals("IsArrive")) {
-            maiteUser.setIsArrive(Integer.valueOf(arr[0]));
-        } else if (type.equals("IsComment")) {
-            maiteUser.setIsComment(Integer.valueOf(arr[0]));
-        }
-        updateWrapper.set(type, arr[0]);
-        updateWrapper.eq("Uin", arr[1]);
-        return maiteUserService.update(maiteUser, updateWrapper);
-    }
-
     @GetMapping("/api/queryGoods/{orderId}")
     @ResponseBody
     public HashMap<String, Object> queryUserGoodsMessageByOrderId(@PathVariable String orderId) {

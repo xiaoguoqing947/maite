@@ -131,10 +131,11 @@
                         , dataType: 'json'
                         , data: JSON.stringify(data)
                         , success: function (result) {
-                            if (result) {
-                                layer.msg("更新成功");
+                            console.log(result)
+                            if (result.success) {
+                                layer.msg(result.information);
                             } else {
-                                layer.msg("更新失败");
+                                layer.msg(result.information);
                             }
                         },
                         error: function (error) {

@@ -82,4 +82,17 @@ public class MaiteDictionaryServiceImpl extends ServiceImpl<MaiteDictionaryMappe
         }
         return result;
     }
+
+    @Override
+    public Boolean queryKeyNameIsExist(String keyName) {
+        Boolean result = true;
+        try {
+            QueryWrapper<MaiteDictionary> queryWrapper = new QueryWrapper<>();
+            queryWrapper.like("KeyName", keyName).last("LIMIT 1");
+            result = maiteDictionaryMapper.selectOne(queryWrapper) != null;
+        } catch (Exception ex) {
+            log.error("[queryKeyNameIsExist]根据字典表关键keyName判定是否已存在重复的命名", ex);
+        }
+        return result;
+    }
 }

@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.maite.shuadanmonitor.shuadantool.entity.MaiteDictionary;
 import com.maite.shuadanmonitor.shuadantool.entity.MaiteUser;
 import com.maite.shuadanmonitor.shuadantool.service.IMaiteDictionaryService;
+import com.maite.shuadanmonitor.utils.ReturnInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,17 +67,24 @@ public class MaiteDictionaryController {
 
     @PostMapping("/update")
     @ResponseBody
-    public Boolean update(@RequestBody MaiteDictionary maiteDictionary) {
-        Boolean result = false;
+    public ReturnInfo<Boolean> update(@RequestBody MaiteDictionary maiteDictionary) {
+        ReturnInfo<Boolean> returnInfo = new ReturnInfo<>();
         UpdateWrapper<MaiteDictionary> updateWrapper = null;
         try {
-            updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("Id", maiteDictionary.getId());
-            result = maiteDictionaryService.update(maiteDictionary, updateWrapper);
+            if (maiteDictionary.getKeyName().isEmpty()) {
+                returnInfo.set(false, 1, "字典【关键值】不能为空！");
+            } else if (maiteDictionaryService.queryKeyNameIsExist(maiteDictionary.getKeyName())) {
+                returnInfo.set(false, 2, "字典【关键值】命名重复，请重新命名！");
+            } else {
+                updateWrapper = new UpdateWrapper<>();
+                updateWrapper.eq("Id", maiteDictionary.getId());
+                Boolean result = maiteDictionaryService.update(maiteDictionary, updateWrapper);
+                returnInfo.set(true, 0, result ? "更新成功" : "更新失败");
+            }
         } catch (Exception ex) {
             log.error("[update]更新字典数据异常", ex);
         }
-        return result;
+        return returnInfo;
     }
 
     @PostMapping("/delete")
@@ -121,12 +129,12 @@ public class MaiteDictionaryController {
 
     @PostMapping("/uploadFile")
     @ResponseBody
-    public HashMap<String, Object> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("goodId") String goodId) {
+    public HashMap<String, Object> uploadFile(@RequestParam("file") MultipartFile file, @RequestParam("goodName") String goodName) {
         HashMap<String, Object> resultMap = new HashMap<>();
         if (file.isEmpty()) {
             resultMap.put("msg", "上传失败，请选择文件");
             resultMap.put("code", 1);
-        } else if (goodId.isEmpty()) {
+        } else if (goodName.isEmpty()) {
             resultMap.put("msg", "请选择指定商品");
             resultMap.put("code", 1);
         } else {
@@ -139,7 +147,7 @@ public class MaiteDictionaryController {
                 MaiteDictionary maiteDictionary = new MaiteDictionary();
                 maiteDictionary.setRemark("/images/goods/" + fileName);
                 updateWrapper.eq("Type", "good");
-                updateWrapper.eq("DcisValue", goodId);
+                updateWrapper.eq("KeyName", goodName);
                 maiteDictionaryService.update(maiteDictionary, updateWrapper);
                 resultMap.put("msg", "上传成功");
                 resultMap.put("code", 0);
