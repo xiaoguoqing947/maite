@@ -2,31 +2,33 @@
     .fixDiv {
         background-color: white;
         overflow: hidden;
-        z-index: 9998;
+        z-index: 10;
         position: fixed;
         text-align: center;
         width: 100%;
-        height: 130px;
+        height: 80px;
         margin-top: -15px;
     }
 </style>
 
 <div class="fixDiv">
-    <div class="layui-row scll" style="margin-top: 10px;">
+    <div class="layui-row scll" style="margin-top: 5px;">
         <div class="layui-col-md4 layui-col-md-offset3">
-            <div class="layui-card">
-                <div class="layui-card-header">
+            <div class="layui-form-item">
+                <div class="layui-inline">
                     <form class="layui-form layui-form-pane" lay-filter="example" action="">
                         <div class="layui-form-item">
                             <label class="layui-form-label">选择商品</label>
                             <div class="layui-input-inline">
-                                <select id="goodSelect" name="goodSelect" lay-search="">
-                                </select>
+                                <input type="text" id="goodName" name="goodName" lay-verify="required"
+                                       placeholder="请输入商品名" autocomplete="on" class="layui-input" list="goodList"
+                                       onkeyup="search()">
+                                <datalist id="goodList"></datalist>
                             </div>
                         </div>
                     </form>
                 </div>
-                <div class="layui-card-body" style="text-align: center">
+                <div class="layui-inline" style="margin-top: 22px">
                     <div class="layui-upload">
                         <button type="button" class="layui-btn" id="uploadPic">上传图片</button>
                         <div class="layui-upload-list">
@@ -39,18 +41,28 @@
         </div>
     </div>
 </div>
-<div class="layui-row" id="imageShowDiv" style="margin-top: 130px">
+<div class="layui-row" id="imageShowDiv" style="margin-top: 80px">
 </div>
 
 <script>
-    layui.use(['form', 'layedit', 'laydate'], function () {
+    var goodList = new Array();
+    function search() {
+        $("#goodList").empty();
+        var good_name = $('#goodName').val();
+        for (i = 1; i < goodList.length; ++i) {
+            if (good_name != "" && goodList[i].match(good_name + ".*") != null) {
+                var option = "<option>" + goodList[i] + "</option>";
+                $("#goodList").append(option);
+            }
+        }
+    }
 
+    layui.use(['form', 'layedit', 'laydate'], function () {
         var form = layui.form
             , layer = layui.layer
         $.ajax({
             url: "api/dictionary/GetDicTypeData"
             , success: function (result) {
-                var strHtml = "<option value=\"\">直接选择或搜索选择</option>";
                 var showImageHtml = '';
                 var goodName = '';
                 var goodValue = '';
@@ -59,7 +71,7 @@
                         goodName = result[i].keyName;
                         goodValue = result[i].dcisValue;
                         if (goodName.length > 0) {
-                            strHtml += '<option value="' + goodValue + '">' + goodName + '</option>';
+                            goodList.push(goodName);
                             showImageHtml += '    <div class="layui-col-md2">\n' +
                                 '        <div class="layui-card">\n' +
                                 '            <div class="layui-card-header" style="text-align: center">【' + goodName + '】</div>\n' +
@@ -72,7 +84,6 @@
                         }
                     }
                 }
-                $('#goodSelect').html(strHtml);
                 $('#imageShowDiv').html(showImageHtml);
                 form.render();
             },
