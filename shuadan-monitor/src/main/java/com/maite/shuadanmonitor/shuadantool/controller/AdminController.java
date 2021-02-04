@@ -1,7 +1,6 @@
 package com.maite.shuadanmonitor.shuadantool.controller;
 
 import cn.hutool.core.date.DateUtil;
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.maite.shuadanmonitor.shuadantool.entity.MaiteDictionary;
 import com.maite.shuadanmonitor.shuadantool.entity.MaiteMainContentEntity;
@@ -11,8 +10,6 @@ import com.maite.shuadanmonitor.shuadantool.entity.vo.UserVoEntity;
 import com.maite.shuadanmonitor.shuadantool.service.IMaiteDictionaryService;
 import com.maite.shuadanmonitor.shuadantool.service.IMaiteOrderIdService;
 import com.maite.shuadanmonitor.shuadantool.service.IMaiteUserService;
-import com.maite.shuadanmonitor.shuadantool.service.impl.MaiteOrderIdServiceImpl;
-import com.maite.shuadanmonitor.shuadantool.service.impl.MaiteUserServiceImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -154,6 +150,23 @@ public class AdminController {
         }
     }
     //#endregion
+
+    @GetMapping("/api/updateState/{type}/{data}")
+    @ResponseBody
+    public Boolean lockUser(@PathVariable String type, @PathVariable String data) {
+        //data: 值_用户名UIN
+        String[] arr = data.split("_");
+        UpdateWrapper<MaiteUser> updateWrapper = new UpdateWrapper<>();
+        MaiteUser maiteUser = new MaiteUser();
+        if (type.equals("IsArrive")) {
+            maiteUser.setIsArrive(Integer.valueOf(arr[0]));
+        } else if (type.equals("IsComment")) {
+            maiteUser.setIsComment(Integer.valueOf(arr[0]));
+        }
+        updateWrapper.set(type, arr[0]);
+        updateWrapper.eq("Uin", arr[1]);
+        return maiteUserService.update(maiteUser, updateWrapper);
+    }
 
     @GetMapping("/api/queryGoods/{orderId}")
     @ResponseBody
