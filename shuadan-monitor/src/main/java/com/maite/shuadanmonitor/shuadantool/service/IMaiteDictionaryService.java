@@ -59,4 +59,5 @@ public interface IMaiteDictionaryService extends IService<MaiteDictionary> {
      */
     public Boolean queryKeyNameIsExist(String keyName);
     //#endregion
+
 }

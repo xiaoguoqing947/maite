@@ -137,9 +137,12 @@ public class MaiteDictionaryController {
             resultMap.put("msg", "上传失败，请选择文件");
             resultMap.put("code", 1);
         } else if (goodName.isEmpty()) {
-            resultMap.put("msg", "请选择指定商品");
+            resultMap.put("msg", "请输入商品名称");
             resultMap.put("code", 1);
-        } else {
+        }else if(!maiteDictionaryService.queryKeyNameIsExist(goodName)){
+            resultMap.put("msg", "请输入指定商品");
+            resultMap.put("code", 1);
+        } else{
             String fileName = file.getOriginalFilename();
             ApplicationHome h = new ApplicationHome(getClass());
             File jarF = h.getSource();
