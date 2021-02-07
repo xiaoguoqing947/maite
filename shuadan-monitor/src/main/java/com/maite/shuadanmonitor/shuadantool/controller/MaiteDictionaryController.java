@@ -5,11 +5,13 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.maite.shuadanmonitor.shuadantool.entity.MaiteDictionary;
 import com.maite.shuadanmonitor.shuadantool.entity.MaiteUser;
+import com.maite.shuadanmonitor.shuadantool.file.FileUtils;
 import com.maite.shuadanmonitor.shuadantool.service.IMaiteDictionaryService;
 import com.maite.shuadanmonitor.utils.ReturnInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.system.ApplicationHome;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.stereotype.Controller;
@@ -139,10 +141,16 @@ public class MaiteDictionaryController {
             resultMap.put("code", 1);
         } else {
             String fileName = file.getOriginalFilename();
-            String filePath = System.getProperty("user.dir") + "/src/main/resources/static/images/goods/";
-            File dest = new File(filePath + fileName);
+            ApplicationHome h = new ApplicationHome(getClass());
+            File jarF = h.getSource();
+            //在jar包所在目录下生成一个upload文件夹用来存储上传的图片
+            String dirPath = jarF.getParentFile().toString()+"/images/goods/";
+            File filePath=new File(dirPath);
+            if(!filePath.exists()){
+                filePath.mkdirs();
+            }
             try {
-                file.transferTo(dest);
+                FileUtils.fileupload(file.getBytes(), dirPath, fileName);
                 UpdateWrapper<MaiteDictionary> updateWrapper = new UpdateWrapper<>();
                 MaiteDictionary maiteDictionary = new MaiteDictionary();
                 maiteDictionary.setRemark("/images/goods/" + fileName);
